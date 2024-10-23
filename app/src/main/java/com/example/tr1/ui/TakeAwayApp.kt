@@ -142,7 +142,7 @@ fun MenuScreen(navController: NavHostController, products: List<Product>) {
                 .padding(16.dp)
         ) {
             items(products) { product ->
-                ProductCard(product = product) {
+                ProductCardScreen(product = product) {
                     navController.navigate(TakeAwayApp.Product.name) // Navegar a la pantalla del producto
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -152,7 +152,7 @@ fun MenuScreen(navController: NavHostController, products: List<Product>) {
 }
 
 @Composable
-fun ProductCard(product: Product, onClick: () -> Unit) {
+fun ProductCardScreen(product: Product, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
