@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">TR1</string>
-    <string name="login">login</string>
-    <string name="menu">menu</string>
-    <string name="producte">producte</string>
-    <string name="perfil">perfil</string>
-    <string name="carret">carret</string>
-    <string name="compra">compra</string>
-    <string name="registrar">registrar</string>
+    <string name="login">Login</string>
+    <string name="menu">Menu</string>
+    <string name="producte">Producte</string>
+    <string name="perfil">Perfil</string>
+    <string name="carret">Carret</string>
+    <string name="compra">Compra</string>
+    <string name="confirmat">Confirmat</string>
+    <string name="registrar">Registrar</string>
 </resources>

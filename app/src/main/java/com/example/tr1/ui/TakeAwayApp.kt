@@ -25,6 +25,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.tr1.model.Product
 import com.example.tr1.data.loadProductsFromJson
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 enum class TakeAwayApp(@StringRes val title: Int) {
     Login(title = R.string.login),
@@ -33,7 +34,9 @@ enum class TakeAwayApp(@StringRes val title: Int) {
     Perfil(title = R.string.perfil),
     Product(title = R.string.producte),
     Carret(title = R.string.carret),
-    Compra(title = R.string.compra)
+    Compra(title = R.string.compra),
+    Confirmat(title = R.string.confirmat)
+
 }
 
 @Composable
@@ -63,12 +66,18 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
         composable(route = TakeAwayApp.Compra.name) {
             CompraScreen(navController)  // Navegar a la nueva pantalla de compra
         }
+        composable(route = TakeAwayApp.Confirmat.name){
+            ConfirmatScreen(navController)
+        }
     }
 }
 
 // Pantalla de login
 @Composable
 fun LoginScreen(navController: NavHostController) {
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -79,6 +88,28 @@ fun LoginScreen(navController: NavHostController) {
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.height(16.dp))
+
+        TextField(
+            value = username,
+            onValueChange = { username = it },
+            label = { Text(text = "Usuario") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text(text = "Contraseña") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp)
+        )
+
         Button(onClick = { navController.navigate(TakeAwayApp.Menu.name) }) {
             Text(text = "Iniciar")
         }
@@ -91,6 +122,9 @@ fun LoginScreen(navController: NavHostController) {
 
 @Composable
 fun RegisterScreen(navController: NavHostController) {
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -101,6 +135,27 @@ fun RegisterScreen(navController: NavHostController) {
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.height(16.dp))
+
+        TextField(
+            value = username,
+            onValueChange = { username = it },
+            label = { Text(text = "Usuario") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text(text = "Contraseña") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp)
+        )
+
         Button(onClick = { navController.navigate(TakeAwayApp.Menu.name) }) {
             Text(text = "Registrar")
         }
@@ -219,6 +274,7 @@ fun PerfilScreen(navController: NavHostController) {
                 text = "Perfil",
                 style = MaterialTheme.typography.titleLarge
             )
+            Button(onClick = {navController.navigate(TakeAwayApp.Login.name)}) { Text("LogOut") }
         }
     }
 }
@@ -316,6 +372,40 @@ fun CompraScreen(navController: NavHostController) {
                 text = "Compra",
                 style = MaterialTheme.typography.titleLarge
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = { navController.navigate(TakeAwayApp.Confirmat.name) }) {
+                Text("Confirmar")
+            }
+        }
+    }
+}
+
+//Pantalla de confirmació
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ConfirmatScreen(navController: NavHostController) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Estat de la compra") },
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Compra completada amb exit!",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = { navController.navigate(TakeAwayApp.Menu.name) }) {
+                Text("Tornar al menu")
+            }
         }
     }
 }
