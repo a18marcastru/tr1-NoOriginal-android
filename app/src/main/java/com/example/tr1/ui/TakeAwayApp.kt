@@ -1,40 +1,34 @@
 package com.example.tr1.ui
 
-import android.content.Intent
-import android.net.Uri
+import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.tr1.R
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import coil.transform.CircleCropTransformation
+import com.example.tr1.model.Product
+import com.example.tr1.data.loadProductsFromJson
+import androidx.compose.foundation.lazy.items
 
 enum class TakeAwayApp(@StringRes val title: Int) {
-    Login(title =R.string.login),
+    Login(title = R.string.login),
+    Register(title = R.string.registrar),
     Menu(title = R.string.menu),
     Perfil(title = R.string.perfil),
     Product(title = R.string.producte),
@@ -43,16 +37,19 @@ enum class TakeAwayApp(@StringRes val title: Int) {
 }
 
 @Composable
-fun TakeAwayApp(navController: NavHostController) {
+fun TakeAwayApp(navController: NavHostController, context: Context) {
+    // Cargar productos desde el archivo JSON
+    val products = remember { loadProductsFromJson(context) } ?: emptyList() // Manejo de nulos
+
     NavHost(navController, startDestination = TakeAwayApp.Login.name) {
         composable(route = TakeAwayApp.Login.name) {
-            LoginScreen(onStartClicked = {
-                // Navegar al menú después de hacer clic en "Iniciar"
-                navController.navigate(TakeAwayApp.Menu.name)
-            })
+            LoginScreen(navController)
+        }
+        composable(route = TakeAwayApp.Register.name) {
+            RegisterScreen(navController)
         }
         composable(route = TakeAwayApp.Menu.name) {
-            MenuScreen(navController)
+            MenuScreen(navController, products) // Pasar la lista de productos
         }
         composable(route = TakeAwayApp.Perfil.name) {
             PerfilScreen(navController)
@@ -71,77 +68,131 @@ fun TakeAwayApp(navController: NavHostController) {
 
 // Pantalla de login
 @Composable
-fun LoginScreen(onStartClicked: () -> Unit) {
+fun LoginScreen(navController: NavHostController) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(id = R.string.login),  // Usar stringResource con el ID del string
+            text = stringResource(id = R.string.login),
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onStartClicked) {
-            Text(text = "Iniciar")  // Asume que tienes un recurso de cadena para "Iniciar"
+        Button(onClick = { navController.navigate(TakeAwayApp.Menu.name) }) {
+            Text(text = "Iniciar")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = { navController.navigate(TakeAwayApp.Register.name) }) {
+            Text(text = "Registrar")
+        }
+    }
+}
+
+@Composable
+fun RegisterScreen(navController: NavHostController) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "Registro",
+            style = MaterialTheme.typography.titleLarge
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = { navController.navigate(TakeAwayApp.Menu.name) }) {
+            Text(text = "Registrar")
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MenuScreen(navController: NavHostController) {
+fun MenuScreen(navController: NavHostController, products: List<Product>) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.menu)) },
                 actions = {
-                    // Botón de Perfil en la esquina superior derecha
                     IconButton(onClick = { navController.navigate(TakeAwayApp.Perfil.name) }) {
                         Icon(
-                            imageVector = Icons.Default.AccountCircle,  // Icono de perfil
+                            imageVector = Icons.Default.AccountCircle,
                             contentDescription = "Ir a Perfil"
                         )
                     }
                 }
             )
+        },
+        bottomBar = {
+            BottomAppBar {
+                IconButton(onClick = { navController.navigate(TakeAwayApp.Carret.name) }) {
+                    Icon(
+                        imageVector = Icons.Default.ShoppingCart,
+                        contentDescription = "Ir al Carret"
+                    )
+                }
+            }
         }
     ) { padding ->
-        // Contenido del menú en el cuerpo
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),  // Respeta el padding del Scaffold
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(padding)
+                .padding(16.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // URL de la imagen
-            val imageUrl = "https://www.zitromac.com/wp-content/uploads/2021/08/Naranja_zumo.jpg" // Reemplaza con tu URL
-
-            // Botón de imagen para ir a productos
-            IconButton(onClick = { navController.navigate(TakeAwayApp.Product.name) }) {
-                // Cargar la imagen desde la URL
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        model = imageUrl
-                    ),
-                    contentDescription = "Ir a Producto",
-                    modifier = Modifier.size(120.dp) // Tamaño de la imagen
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Botón de texto para ir al carrito
-            Button(onClick = { navController.navigate(TakeAwayApp.Carret.name) }) {
-                Text(text = "Ir a Carret")
+            items(products) { product ->
+                ProductCard(product = product) {
+                    navController.navigate(TakeAwayApp.Product.name) // Navegar a la pantalla del producto
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
 }
 
-// Pantalla de Perfil con botón de retroceso
+@Composable
+fun ProductCard(product: Product, onClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(16.dp), // Espaciado interno
+        horizontalAlignment = Alignment.Start
+    ) {
+        val painter = rememberAsyncImagePainter(model = product.Imatge)
+        Image(
+            painter = painter,
+            contentDescription = product.nomProducte,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = product.nomProducte,
+            style = MaterialTheme.typography.titleMedium,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            text = product.Descripcio,
+            style = MaterialTheme.typography.bodyMedium,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            text = "Precio: \$${product.Preu}",
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = "Stock: ${product.Stock}",
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+// Pantalla de Perfil
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerfilScreen(navController: NavHostController) {
@@ -165,14 +216,14 @@ fun PerfilScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Perfil",  // Asume que tienes un recurso de cadena para el menú
+                text = "Perfil",
                 style = MaterialTheme.typography.titleLarge
             )
         }
     }
 }
 
-// Pantalla de Productos con botón de retroceso
+// Pantalla de Productos
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductScreen(navController: NavHostController) {
@@ -196,14 +247,14 @@ fun ProductScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Productos",  // Asume que tienes un recurso de cadena para el menú
+                text = "Productos",
                 style = MaterialTheme.typography.titleLarge
             )
         }
     }
 }
 
-// Pantalla de Carret con botón de retroceso
+// Pantalla de Carret
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CarretScreen(navController: NavHostController) {
@@ -227,16 +278,18 @@ fun CarretScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Carret",  // Asume que tienes un recurso de cadena para el menú
+                text = "Carret",
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = { navController.navigate(TakeAwayApp.Compra.name) }) {
-                Text("Comprar") }
+                Text("Comprar")
+            }
         }
     }
 }
 
+// Pantalla de Compra
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompraScreen(navController: NavHostController) {
@@ -253,16 +306,16 @@ fun CompraScreen(navController: NavHostController) {
         }
     ) { padding ->
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Compra",  // Título de la pantalla de compra
+                text = "Compra",
                 style = MaterialTheme.typography.titleLarge
             )
-            // Aquí puedes agregar más contenido relacionado con la compra
         }
     }
 }

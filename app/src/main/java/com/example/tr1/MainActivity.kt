@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     // Llamar a TakeAwayApp sin NavController
                     val navController = rememberNavController()
-                    TakeAwayApp(navController) // Pasar 'this' como contexto
+                    TakeAwayApp(navController, this) // Pasar 'this' como contexto
                 }
             }
         }
