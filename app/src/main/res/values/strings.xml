@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">TR1</string>
+    <string name="login">login</string>
     <string name="menu">menu</string>
+    <string name="producte">producte</string>
+    <string name="perfil">perfil</string>
+    <string name="carret">carret</string>
+    <string name="compra">compra</string>
 </resources>
