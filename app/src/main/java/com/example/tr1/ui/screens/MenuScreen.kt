@@ -1,4 +1,6 @@
 import android.media.Image
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import com.example.tr1.R
 import androidx.compose.foundation.layout.Arrangement
@@ -17,20 +19,23 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.rememberAsyncImagePainter
-import androidx.compose.foundation.Image
+import com.example.tr1.model.Product
+import com.example.tr1.ui.TakeAwayApp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MenuScreen(navController: NavHostController) {
+fun MenuScreen(navController: NavHostController, products: List<Product>) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.menu)) },
                 actions = {
-                    IconButton(onClick = { navController.navigate("asd") }) {
+                    IconButton(onClick = { navController.navigate(TakeAwayApp.Perfil.name) }) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
                             contentDescription = "Ir a Perfil"
@@ -38,42 +43,71 @@ fun MenuScreen(navController: NavHostController) {
                     }
                 }
             )
+        },
+        bottomBar = {
+            BottomAppBar {
+                IconButton(onClick = { navController.navigate(TakeAwayApp.Carret.name) }) {
+                    Icon(
+                        imageVector = Icons.Default.ShoppingCart,
+                        contentDescription = "Ir al Carret"
+                    )
+                }
+            }
         }
     ) { padding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(padding)
+                .padding(16.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            val imageUrl = "https://www.zitromac.com/wp-content/uploads/2021/08/Naranja_zumo.jpg" // Reemplaza con tu URL
-
-
-            IconButton(onClick = { navController.navigate("aaa") }) {
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        model = imageUrl
-                    ),
-                    contentDescription = "Ir a Producto",
-                    modifier = Modifier.size(120.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(onClick = { navController.navigate("aaa") }) {
-                Text(text = "Ir a Carret")
+            items(products) { product ->
+                ProductCardScreen(product = product) {
+                    navController.navigate("productScreen/${product.nomProducte}") // Navegar a la pantalla del producto
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun PreviewMenuScreen() {
-    val navController = rememberNavController()
-    MenuScreen(navController = navController)
+fun ProductCardScreen(product: Product, onClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        val painter = rememberAsyncImagePainter(model = product.Imatge)
+        Image(
+            painter = painter,
+            contentDescription = product.nomProducte,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = product.nomProducte,
+            style = MaterialTheme.typography.titleMedium,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            text = product.Descripcio,
+            style = MaterialTheme.typography.bodyMedium,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            text = "Precio: \$${product.Preu}",
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = "Stock: ${product.Stock}",
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
 }
-

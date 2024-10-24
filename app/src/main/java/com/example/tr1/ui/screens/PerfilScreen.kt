@@ -11,9 +11,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
+import com.example.tr1.ui.TakeAwayApp
 
+// Pantalla de Perfil
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerfilScreen(navController: NavHostController) {
@@ -40,14 +40,8 @@ fun PerfilScreen(navController: NavHostController) {
                 text = "Perfil",
                 style = MaterialTheme.typography.titleLarge
             )
+            Button(onClick = {navController.navigate(TakeAwayApp.Login.name)}) { Text("LogOut") }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewPerfilScreen() {
-    val navController = rememberNavController()
-    PerfilScreen(navController = navController)
 }
 
