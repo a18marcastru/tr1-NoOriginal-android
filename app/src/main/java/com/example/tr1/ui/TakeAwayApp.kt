@@ -23,7 +23,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.tr1.model.Product
-import com.example.tr1.data.loadProductsFromJson
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 
