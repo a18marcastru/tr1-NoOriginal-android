@@ -339,7 +339,7 @@ fun CarretScreen(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = { navController.navigate(TakeAwayApp.Compra.name) }) {
-                Text("Comprar")
+                Text("Fer el pagament")
             }
         }
     }
@@ -349,6 +349,7 @@ fun CarretScreen(navController: NavHostController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompraScreen(navController: NavHostController) {
+    var showDialog by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -373,39 +374,65 @@ fun CompraScreen(navController: NavHostController) {
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { navController.navigate(TakeAwayApp.Confirmat.name) }) {
+            Button(onClick = { showDialog = true }) {
                 Text("Confirmar")
             }
-        }
-    }
-}
-
-//Pantalla de confirmació
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ConfirmatScreen(navController: NavHostController) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Estat de la compra") },
-            )
-        }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Compra completada amb exit!",
-                style = MaterialTheme.typography.titleLarge
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { navController.navigate(TakeAwayApp.Menu.name) }) {
-                Text("Tornar al menu")
+            if (showDialog){
+                ConfirmationDialog(
+                    onDismiss = { showDialog = false },
+                    onConfirm = {
+                        navController.navigate(TakeAwayApp.Confirmat.name)
+                        showDialog = false
+                    }
+                )
             }
         }
     }
 }
+@Composable
+fun ConfirmationDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Confirmació") },
+        text = { Text("Vols continuar amb la compra") },
+        confirmButton = {
+            Button(onClick = onConfirm) {
+                Text("Confirmar")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Cancelar")
+            }
+        }
+    )
+}
+    //Pantalla de confirmació
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun ConfirmatScreen(navController: NavHostController) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(text = "Estat de la compra") },
+                )
+            }
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Compra completada amb exit!",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = { navController.navigate(TakeAwayApp.Menu.name) }) {
+                    Text("Tornar al menu")
+                }
+            }
+        }
+    }
