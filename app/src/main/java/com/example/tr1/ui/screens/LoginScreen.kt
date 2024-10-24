@@ -1,5 +1,6 @@
 package com.example.tr1.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,12 +24,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.tr1.R
+import com.example.tr1.data.loadUsuarisFromJson
 import com.example.tr1.ui.TakeAwayApp
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController, context: Context) {
+    // Variables de estado para capturar la entrada del usuario
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var loginError by remember { mutableStateOf(false) }
+
+    // Cargar la lista de usuarios desde el archivo JSON
+    val usuaris = loadUsuarisFromJson(context)
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -41,6 +48,7 @@ fun LoginScreen(navController: NavHostController) {
         )
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Campo para el nombre de usuario
         TextField(
             value = username,
             onValueChange = { username = it },
@@ -52,6 +60,7 @@ fun LoginScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Campo para la contraseña
         TextField(
             value = password,
             onValueChange = { password = it },
@@ -62,10 +71,35 @@ fun LoginScreen(navController: NavHostController) {
                 .padding(horizontal = 15.dp)
         )
 
-        Button(onClick = { navController.navigate(TakeAwayApp.Menu.name) }) {
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Botón de inicio de sesión
+        Button(onClick = {
+            // Validar los datos de inicio de sesión
+            val usuariTrobat = usuaris?.find { it.Nom == username && it.Contrasenya == password }
+            if (usuariTrobat != null) {
+                // Iniciar sesión y navegar a la pantalla del menú
+                navController.navigate(TakeAwayApp.Menu.name)
+            } else {
+                // Mostrar un mensaje de error si no se encuentra el usuario
+                loginError = true
+            }
+        }) {
             Text(text = "Iniciar")
         }
+
+        // Mensaje de error si el inicio de sesión falla
+        if (loginError) {
+            Text(
+                text = "Usuario o contraseña incorrectos",
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
+
+        // Botón para registrarse
         Button(onClick = { navController.navigate(TakeAwayApp.Register.name) }) {
             Text(text = "Registrar")
         }

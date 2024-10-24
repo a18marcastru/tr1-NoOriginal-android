@@ -1,0 +1,28 @@
+{
+  "usuaris": [
+    {
+      "idNom":"1",
+      "Nom":"User1",
+      "Correu":"a21rublormar@inspedralbes.cat",
+      "Contrasenya":"password1"
+    },
+    {
+      "idNom":"2",
+      "Nom":"User2",
+      "Correu":"a23marclacas@inspedralbes.cat",
+      "Contrasenya":"password2"
+    },
+    {
+      "idNom":"3",
+      "Nom":"User1",
+      "Correu":"a18marcastru@inspedralbes.cat",
+      "Contrasenya":"password3"
+    },
+    {
+      "idNom":"4",
+      "Nom":"User1",
+      "Correu":"a22arnmaljoa@inspedralbes.cat",
+      "Contrasenya":"password4"
+    }
+  ]
+}

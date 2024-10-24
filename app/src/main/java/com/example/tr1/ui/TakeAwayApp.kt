@@ -47,7 +47,7 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
 
     NavHost(navController, startDestination = TakeAwayApp.Login.name) {
         composable(route = TakeAwayApp.Login.name) {
-            LoginScreen(navController)
+            LoginScreen(navController, context)
         }
         composable(route = TakeAwayApp.Register.name) {
             RegisterScreen(navController)
