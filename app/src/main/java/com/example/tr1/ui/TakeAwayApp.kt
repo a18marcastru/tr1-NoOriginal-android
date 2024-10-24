@@ -26,6 +26,8 @@ import com.example.tr1.model.Product
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.example.tr1.data.loadProductsFromApi
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 enum class TakeAwayApp(@StringRes val title: Int) {
     Login(title = R.string.login),
@@ -61,12 +63,27 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
         }
         composable(route = TakeAwayApp.Menu.name) {
             MenuScreen(navController, products) // Pasar la lista de productos
+            if (products != null) {
+                MenuScreen(navController, products)
+            } else {
+                // Mostrar un mensaje de carga mientras los productos se obtienen
+                Text("Cargando productos...")
+            }
         }
         composable(route = TakeAwayApp.Perfil.name) {
             PerfilScreen(navController)
         }
-        composable(route = TakeAwayApp.Product.name) {
-            ProductScreen(navController)
+        composable(
+            route = "productScreen/{productId}",
+            arguments = listOf(navArgument("productId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getString("productId")
+            val selectedProduct = products?.find { it.nomProducte == productId }
+            if (selectedProduct != null) {
+                ProductScreen(navController, selectedProduct)
+            } else {
+                Text("Producto no encontrado")
+            }
         }
         composable(route = TakeAwayApp.Carret.name) {
             CarretScreen(navController)
@@ -206,7 +223,7 @@ fun MenuScreen(navController: NavHostController, products: List<Product>) {
         ) {
             items(products) { product ->
                 ProductCardScreen(product = product) {
-                    navController.navigate(TakeAwayApp.Product.name) // Navegar a la pantalla del producto
+                    navController.navigate("productScreen/${product.nomProducte}") // Navegar a la pantalla del producto
                 }
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -290,7 +307,7 @@ fun PerfilScreen(navController: NavHostController) {
 // Pantalla de Productos
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductScreen(navController: NavHostController) {
+fun ProductScreen(navController: NavHostController,product: Product) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -306,13 +323,28 @@ fun ProductScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
+                .padding(padding)
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "Productos",
-                style = MaterialTheme.typography.titleLarge
+            Text(text = product.nomProducte, style = MaterialTheme.typography.titleLarge)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = product.Descripcio, style = MaterialTheme.typography.bodyMedium)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Precio: \$${product.Preu}", style = MaterialTheme.typography.bodyMedium)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Stock: ${product.Stock}", style = MaterialTheme.typography.bodyMedium)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Cargar y mostrar la imagen del producto
+            val painter = rememberAsyncImagePainter(model = product.Imatge)
+            Image(
+                painter = painter,
+                contentDescription = product.nomProducte,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
             )
         }
     }
