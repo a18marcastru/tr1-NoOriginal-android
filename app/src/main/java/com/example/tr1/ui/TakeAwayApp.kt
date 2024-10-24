@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.tr1.model.Product
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.example.tr1.data.loadProductsFromApi
 
 enum class TakeAwayApp(@StringRes val title: Int) {
