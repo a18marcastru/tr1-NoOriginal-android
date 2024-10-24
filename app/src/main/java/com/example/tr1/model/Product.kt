@@ -1,7 +1,5 @@
 package com.example.tr1.model
 
-import com.google.gson.annotations.SerializedName
-
 data class Product(
     val nomProducte: String,
     val Descripcio: String,

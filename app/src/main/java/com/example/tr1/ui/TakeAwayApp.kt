@@ -23,8 +23,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.tr1.model.Product
-import com.example.tr1.data.loadProductsFromJson
 import androidx.compose.foundation.lazy.items
+import com.example.tr1.data.loadProductsFromApi
 
 enum class TakeAwayApp(@StringRes val title: Int) {
     Login(title = R.string.login),
@@ -39,7 +39,15 @@ enum class TakeAwayApp(@StringRes val title: Int) {
 @Composable
 fun TakeAwayApp(navController: NavHostController, context: Context) {
     // Cargar productos desde el archivo JSON
-    val products = remember { loadProductsFromJson(context) } ?: emptyList() // Manejo de nulos
+    var products by remember { mutableStateOf<List<Product>>(emptyList()) } // Manejo de nulos
+
+    LaunchedEffect(Unit) {
+        loadProductsFromApi { productesResponse ->
+            if (productesResponse != null) {
+                products = productesResponse.productes  // Actualizar productos si la respuesta es exitosa
+            }
+        }
+    }
 
     NavHost(navController, startDestination = TakeAwayApp.Login.name) {
         composable(route = TakeAwayApp.Login.name) {

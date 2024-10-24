@@ -1,26 +1,31 @@
 package com.example.tr1.data
 
-import android.content.Context
-import com.example.tr1.R
-import com.example.tr1.model.Product
 import com.example.tr1.model.ProductesResponse
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import android.util.Log
+import com.example.tr1.network.RetrofitInstance
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-fun loadProductsFromJson(context: Context): List<Product>? {
-    // Cargar el archivo JSON desde la carpeta raw
-    val jsonString = context.resources.openRawResource(R.raw.products) // Asegúrate de que el nombre del archivo sea correcto
-        .bufferedReader().use { it.readText() }
+fun loadProductsFromApi(onProductsLoaded: (ProductesResponse?) -> Unit) {
+    val call = RetrofitInstance.api.getProducts()
 
-    // Crear una instancia de Gson
-    val gson = Gson()
+    call.enqueue(object : Callback<ProductesResponse> {
+        override fun onResponse(call: Call<ProductesResponse>, response: Response<ProductesResponse>) {
+            if (response.isSuccessful) {
+                // Devolvemos los productos cuando la respuesta es exitosa
+                onProductsLoaded(response.body())
+            } else {
+                // Logueamos el error en la respuesta y devolvemos null
+                Log.e("TakeAwayApp", "Error en la respuesta: ${response.code()}")
+                onProductsLoaded(null)
+            }
+        }
 
-    // Especificar el tipo de respuesta esperado
-    val productType = object : TypeToken<ProductesResponse>() {}.type
-
-    // Deserializar el JSON a un objeto ProductesResponse
-    val response: ProductesResponse = gson.fromJson(jsonString, productType)
-
-    // Retornar la lista de productos
-    return response.productes
+        override fun onFailure(call: Call<ProductesResponse>, t: Throwable) {
+            // Logueamos el error en caso de fallo de conexión y devolvemos null
+            Log.e("TakeAwayApp", "Error de conexión tu puta madre: ${t.message}")
+            onProductsLoaded(null)
+        }
+    })
 }
