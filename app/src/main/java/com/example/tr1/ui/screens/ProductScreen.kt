@@ -1,4 +1,3 @@
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,11 +15,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.tr1.model.Product
+import com.example.tr1.ui.TakeAwayViewModel
 
-// Pantalla de Productos
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductScreen(navController: NavHostController, product: Product) {
+fun ProductScreen(navController: NavHostController, product: Product, viewModel: TakeAwayViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -59,6 +58,16 @@ fun ProductScreen(navController: NavHostController, product: Product) {
                     .fillMaxWidth()
                     .height(250.dp)
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Botón para añadir al carrito
+            Button(onClick = {
+                viewModel.addToCart(product) // Añadir producto al carrito
+                // Opcional: mostrar un mensaje de que se ha añadido
+            }) {
+                Text(text = "Añadir al Carrito")
+            }
         }
     }
 }

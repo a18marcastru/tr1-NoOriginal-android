@@ -1,6 +1,7 @@
 package com.example.tr1.ui
 
 import android.content.Context
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,6 +18,9 @@ class TakeAwayViewModel() : ViewModel() {
     var loginError = mutableStateOf<String?>(null)
         private set
 
+    var cartProducts = mutableStateListOf<Product>()
+        private set
+
     fun loadProducts() {
         viewModelScope.launch {
             loadProductsFromApi { productesResponse ->
@@ -25,6 +29,18 @@ class TakeAwayViewModel() : ViewModel() {
                 }
             }
         }
+    }
+
+    fun addToCart(product: Product) {
+        cartProducts.add(product)
+    }
+
+    fun resetCart() {
+        cartProducts.clear()
+    }
+
+    fun removeProductFromCart(product: Product) {
+        cartProducts.remove(product) // Elimina el producto especificado
     }
 
     fun login(username: String, password: String, context: Context) {
