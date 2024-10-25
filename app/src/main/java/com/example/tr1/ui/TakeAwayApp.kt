@@ -7,12 +7,11 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.tr1.R
 import androidx.navigation.NavHostController
-import com.example.tr1.model.Product
-import com.example.tr1.data.loadProductsFromApi
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.tr1.ui.screens.CarretScreen
@@ -36,30 +35,26 @@ enum class TakeAwayApp(@StringRes val title: Int) {
 
 @Composable
 fun TakeAwayApp(navController: NavHostController, context: Context) {
-    // Cargar productos desde el archivo JSON
-    var products by remember { mutableStateOf<List<Product>>(emptyList()) } // Manejo de nulos
+    // Inicializar el ViewModel
+    val viewModel: TakeAwayViewModel = viewModel()
 
+    // Cargar productos desde la API cuando la app se inicia
     LaunchedEffect(Unit) {
-        loadProductsFromApi { productesResponse ->
-            if (productesResponse != null) {
-                products = productesResponse.productes  // Actualizar productos si la respuesta es exitosa
-            }
-        }
+        viewModel.loadProducts()
     }
 
     NavHost(navController, startDestination = TakeAwayApp.Login.name) {
         composable(route = TakeAwayApp.Login.name) {
-            LoginScreen(navController, context)
+            LoginScreen(navController, context, viewModel)
         }
         composable(route = TakeAwayApp.Register.name) {
             RegisterScreen(navController)
         }
         composable(route = TakeAwayApp.Menu.name) {
-            MenuScreen(navController, products) // Pasar la lista de productos
+            val products = viewModel.products.value
             if (products != null) {
                 MenuScreen(navController, products)
             } else {
-                // Mostrar un mensaje de carga mientras los productos se obtienen
                 Text("Cargando productos...")
             }
         }
@@ -69,11 +64,10 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
         composable(route = TakeAwayApp.Comandes.name) {
             ComandesScreen(navController)
         }
-        composable(
-            route = "productScreen/{productId}",
-            arguments = listOf(navArgument("productId") { type = NavType.StringType })
-        ) { backStackEntry ->
+        composable(route = "productScreen/{productId}",
+            arguments = listOf(navArgument("productId") { type = NavType.StringType })) { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId")
+            val products = viewModel.products.value
             val selectedProduct = products?.find { it.nomProducte == productId }
             if (selectedProduct != null) {
                 ProductScreen(navController, selectedProduct)
@@ -85,11 +79,10 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             CarretScreen(navController)
         }
         composable(route = TakeAwayApp.Compra.name) {
-            CompraScreen(navController)  // Navegar a la nueva pantalla de compra
+            CompraScreen(navController)
         }
-        composable(route = TakeAwayApp.Confirmat.name){
+        composable(route = TakeAwayApp.Confirmat.name) {
             ConfirmatScreen(navController)
         }
     }
 }
-

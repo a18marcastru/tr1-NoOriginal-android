@@ -22,6 +22,6 @@ object RetrofitInstance {
 }
 
 interface TakeAwayApi {
-    @GET("getProductes") // Cambia esto a la ruta de tu endpoint
+    @GET("getProductesBD") // Cambia esto a la ruta de tu endpoint
     fun getProducts(): Call<ProductesResponse>
 }

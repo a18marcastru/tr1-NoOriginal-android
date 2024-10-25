@@ -24,18 +24,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.tr1.R
-import com.example.tr1.data.loadUsuarisFromJson
 import com.example.tr1.ui.TakeAwayApp
+import com.example.tr1.ui.TakeAwayViewModel
 
 @Composable
-fun LoginScreen(navController: NavHostController, context: Context) {
+fun LoginScreen(navController: NavHostController, context: Context, viewModel: TakeAwayViewModel) {
     // Variables de estado para capturar la entrada del usuario
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var loginError by remember { mutableStateOf(false) }
-
-    // Cargar la lista de usuarios desde el archivo JSON
-    val usuaris = loadUsuarisFromJson(context)
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -75,23 +71,19 @@ fun LoginScreen(navController: NavHostController, context: Context) {
 
         // Botón de inicio de sesión
         Button(onClick = {
-            // Validar los datos de inicio de sesión
-            val usuariTrobat = usuaris?.find { it.Nom == username && it.Contrasenya == password }
-            if (usuariTrobat != null) {
+            viewModel.login(username, password, context)
+            if (viewModel.loginError.value == null) {
                 // Iniciar sesión y navegar a la pantalla del menú
                 navController.navigate(TakeAwayApp.Menu.name)
-            } else {
-                // Mostrar un mensaje de error si no se encuentra el usuario
-                loginError = true
             }
         }) {
             Text(text = "Iniciar")
         }
 
         // Mensaje de error si el inicio de sesión falla
-        if (loginError) {
+        viewModel.loginError.value?.let {
             Text(
-                text = "Usuario o contraseña incorrectos",
+                text = it,
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.padding(top = 8.dp)
             )
