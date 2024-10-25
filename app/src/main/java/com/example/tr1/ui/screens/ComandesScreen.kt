@@ -1,26 +1,32 @@
-import androidx.compose.runtime.Composable
+package com.example.tr1.ui.screens
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import com.example.tr1.ui.TakeAwayApp
 
-// Pantalla de Perfil
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilScreen(navController: NavHostController) {
+fun ComandesScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Perfil") },
+                title = { Text(text = "Comandes") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver")
@@ -37,13 +43,9 @@ fun PerfilScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Perfil",
+                text = "Historial de Comandes",
                 style = MaterialTheme.typography.titleLarge
             )
-            Button(onClick = { navController.navigate(TakeAwayApp.Comandes.name) }) {
-                Text(text = "Historial de comandes")
-            }
-            Button(onClick = {navController.navigate(TakeAwayApp.Login.name)}) { Text("LogOut") }
         }
     }
 }

@@ -16,6 +16,7 @@ import com.example.tr1.data.loadProductsFromApi
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.tr1.ui.screens.CarretScreen
+import com.example.tr1.ui.screens.ComandesScreen
 import com.example.tr1.ui.screens.CompraScreen
 import com.example.tr1.ui.screens.ConfirmatScreen
 import com.example.tr1.ui.screens.LoginScreen
@@ -26,6 +27,7 @@ enum class TakeAwayApp(@StringRes val title: Int) {
     Register(title = R.string.registrar),
     Menu(title = R.string.menu),
     Perfil(title = R.string.perfil),
+    Comandes(title = R.string.comandes),
     Carret(title = R.string.carret),
     Compra(title = R.string.compra),
     Confirmat(title = R.string.confirmat)
@@ -63,6 +65,9 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
         }
         composable(route = TakeAwayApp.Perfil.name) {
             PerfilScreen(navController)
+        }
+        composable(route = TakeAwayApp.Comandes.name) {
+            ComandesScreen(navController)
         }
         composable(
             route = "productScreen/{productId}",
