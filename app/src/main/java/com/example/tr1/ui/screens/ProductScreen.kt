@@ -1,4 +1,3 @@
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,11 +15,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.tr1.model.Product
+import com.example.tr1.ui.ComandaViewModel
 
 // Pantalla de Productos
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductScreen(navController: NavHostController, product: Product) {
+fun ProductScreen(navController: NavHostController, product: Product, comandaViewModel: ComandaViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -59,6 +59,17 @@ fun ProductScreen(navController: NavHostController, product: Product) {
                     .fillMaxWidth()
                     .height(250.dp)
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = { comandaViewModel.addToCart(product) }) {
+                Text("Afegir a la cistella")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = { comandaViewModel.removeFromCart(product) }) {
+                Text("Treure de la cistella")
+            }
         }
     }
 }

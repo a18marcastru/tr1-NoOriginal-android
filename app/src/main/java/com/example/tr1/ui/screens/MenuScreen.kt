@@ -25,11 +25,12 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.rememberAsyncImagePainter
 import com.example.tr1.model.Product
+import com.example.tr1.ui.ComandaViewModel
 import com.example.tr1.ui.TakeAwayApp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MenuScreen(navController: NavHostController, products: List<Product>) {
+fun MenuScreen(navController: NavHostController, products: List<Product>, comandaViewModel: ComandaViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(

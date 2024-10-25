@@ -38,8 +38,9 @@ enum class TakeAwayApp(@StringRes val title: Int) {
 fun TakeAwayApp(navController: NavHostController, context: Context) {
     // Cargar productos desde el archivo JSON
     var products by remember { mutableStateOf<List<Product>>(emptyList()) } // Manejo de nulos
+    val comandaViewModel = remember { ComandaViewModel() }
 
-    LaunchedEffect(Unit) {
+        LaunchedEffect(Unit) {
         loadProductsFromApi { productesResponse ->
             if (productesResponse != null) {
                 products = productesResponse.productes  // Actualizar productos si la respuesta es exitosa
@@ -55,9 +56,9 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             RegisterScreen(navController)
         }
         composable(route = TakeAwayApp.Menu.name) {
-            MenuScreen(navController, products) // Pasar la lista de productos
+            MenuScreen(navController, products, comandaViewModel) // Pasar la lista de productos
             if (products != null) {
-                MenuScreen(navController, products)
+                MenuScreen(navController, products, comandaViewModel)
             } else {
                 // Mostrar un mensaje de carga mientras los productos se obtienen
                 Text("Cargando productos...")
@@ -76,13 +77,13 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             val productId = backStackEntry.arguments?.getString("productId")
             val selectedProduct = products?.find { it.nomProducte == productId }
             if (selectedProduct != null) {
-                ProductScreen(navController, selectedProduct)
+                ProductScreen(navController, selectedProduct, comandaViewModel)
             } else {
                 Text("Producto no encontrado")
             }
         }
         composable(route = TakeAwayApp.Carret.name) {
-            CarretScreen(navController)
+            CarretScreen(navController, comandaViewModel)
         }
         composable(route = TakeAwayApp.Compra.name) {
             CompraScreen(navController)  // Navegar a la nueva pantalla de compra
