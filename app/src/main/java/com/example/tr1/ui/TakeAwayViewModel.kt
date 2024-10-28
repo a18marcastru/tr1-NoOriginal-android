@@ -31,12 +31,38 @@ class TakeAwayViewModel() : ViewModel() {
         }
     }
 
+    fun incrementProductQuantity(product: Product) {
+        val index = cartProducts.indexOf(product)
+
+        if(index != -1){
+            cartProducts[index] = cartProducts[index].copy(quantity = cartProducts[index].quantity + 1)
+        }
+    }
+
+    fun decrementProductQuantity(product: Product) {
+        val index = cartProducts.indexOf(product)
+
+        if(index != 1 && cartProducts[index].quantity > 1){
+            cartProducts[index] = cartProducts[index].copy(quantity = cartProducts[index].quantity - 1)
+        }
+    }
+
     fun addToCart(product: Product) {
-        cartProducts.add(product)
+        val existingProduct = cartProducts.find { it.nomProducte == product.nomProducte }
+        if(existingProduct != null){
+            incrementProductQuantity(existingProduct)
+        }else{
+            cartProducts.add(product.copy(quantity = 1))
+        }
+
     }
 
     fun resetCart() {
         cartProducts.clear()
+    }
+
+    fun getTotalPrice(): Double{
+        return cartProducts.sumOf { it.Preu * it.quantity }
     }
 
     fun removeProductFromCart(product: Product) {

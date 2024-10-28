@@ -3,6 +3,7 @@ package com.example.tr1.ui.screens
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,16 +59,32 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                     Column(modifier = Modifier.padding(vertical = 8.dp)) {
                         Text(text = product.nomProducte, style = MaterialTheme.typography.bodyLarge)
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text(text = "Precio: \$${product.Preu}", style = MaterialTheme.typography.bodyMedium)
+                        Text(text = "Preu producte: ${product.Preu} €", style = MaterialTheme.typography.bodyMedium)
                         Spacer(modifier = Modifier.height(8.dp))
-                        Button(
-                            onClick = {
-                                viewModel.removeProductFromCart(product) // Llama a la función de eliminar producto
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+
+                        // Row for quantity control and delete icon
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(text = "Eliminar producto", color = Color.White)
+                            // Quantity control
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                IconButton(onClick = { viewModel.decrementProductQuantity(product) }) {
+                                    Text(text = "-")
+                                }
+                                Text(text = product.quantity.toString(), style = MaterialTheme.typography.bodyMedium)
+                                IconButton(onClick = { viewModel.incrementProductQuantity(product) }) {
+                                    Text(text = "+")
+                                }
+                            }
+                            // Delete icon
+                            IconButton(
+                                onClick = { viewModel.removeProductFromCart(product) },
+                                colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                            ) {
+                                Icon(imageVector = Icons.Default.Delete, contentDescription = "Eliminar producto")
+                            }
                         }
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -84,6 +102,11 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                     ) {
                         Text(text = "Reiniciar Carrito")
                     }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Precio total del pedido: ${viewModel.getTotalPrice()} €",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
             }
         }
