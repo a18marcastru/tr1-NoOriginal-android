@@ -5,8 +5,10 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tr1.data.loadComandesFromApi
 import com.example.tr1.data.loadProductsFromApi
 import com.example.tr1.data.loadUsuarisFromJson
+import com.example.tr1.model.Comanda
 import com.example.tr1.model.Product
 import com.google.gson.Gson
 import io.socket.client.IO
@@ -22,7 +24,10 @@ class TakeAwayViewModel() : ViewModel() {
     var loginError = mutableStateOf<String?>(null)
         private set
 
-    lateinit var mSocket: Socket
+    var comandes = mutableStateOf<List<Comanda>?>(null)
+        private set
+
+    private lateinit var mSocket: Socket
 
     // Creació de socket
     init {
@@ -97,6 +102,16 @@ class TakeAwayViewModel() : ViewModel() {
             loadProductsFromApi { productesResponse ->
                 productesResponse?.let {
                     products.value = it.productes
+                }
+            }
+        }
+    }
+
+    fun loadComandes() {
+        viewModelScope.launch {
+            loadComandesFromApi { comandesResponse ->
+                comandesResponse?.let {
+                    comandes.value = it.comandes
                 }
             }
         }

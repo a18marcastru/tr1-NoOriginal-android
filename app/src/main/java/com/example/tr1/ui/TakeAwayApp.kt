@@ -20,6 +20,7 @@ import com.example.tr1.ui.screens.CompraScreen
 import com.example.tr1.ui.screens.ConfirmatScreen
 import com.example.tr1.ui.screens.LoginScreen
 import com.example.tr1.ui.screens.RegisterScreen
+import com.example.tr1.model.Comanda
 
 enum class TakeAwayApp(@StringRes val title: Int) {
     Login(title = R.string.login),
@@ -41,6 +42,7 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
     // Cargar productos desde la API cuando la app se inicia
     LaunchedEffect(Unit) {
         viewModel.loadProducts()
+        viewModel.comandes.value = emptyList()
     }
 
     NavHost(navController, startDestination = TakeAwayApp.Login.name) {
@@ -55,14 +57,19 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             if (products != null) {
                 MenuScreen(navController, products)
             } else {
-                Text("Cargando productos...")
+                Text("Carregant productes...")
             }
         }
         composable(route = TakeAwayApp.Perfil.name) {
             PerfilScreen(navController)
         }
         composable(route = TakeAwayApp.Comandes.name) {
-            ComandesScreen(navController)
+            val comandes = viewModel.comandes.value
+            if (comandes != null) {
+                ComandesScreen(navController, comandes)
+            } else {
+                Text("Carregant comandes...")
+            }
         }
         composable(route = "productScreen/{productId}",
             arguments = listOf(navArgument("productId") { type = NavType.StringType })) { backStackEntry ->
