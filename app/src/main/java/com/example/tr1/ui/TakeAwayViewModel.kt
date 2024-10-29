@@ -26,6 +26,7 @@ class TakeAwayViewModel() : ViewModel() {
             loadProductsFromApi { productesResponse ->
                 productesResponse?.let {
                     products.value = it.productes
+                    println(products.value)
                 }
             }
         }

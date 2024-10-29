@@ -20,6 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.example.tr1.ui.TakeAwayViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -77,7 +80,17 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAway
             .padding(16.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        val painter = rememberAsyncImagePainter(model = product.Imatge)
+        val painter = rememberAsyncImagePainter(
+            ImageRequest.Builder(LocalContext.current)
+                .data(data = product.Imatge)
+                .apply {
+                    diskCachePolicy(CachePolicy.ENABLED)
+                    crossfade(true)
+                    placeholder(R.drawable.ic_launcher_background)
+//                    error(R.drawable.error_image)
+                }
+                .build()
+        )
         Image(
             painter = painter,
             contentDescription = product.nomProducte,
@@ -102,7 +115,7 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAway
 
         if (product.Stock == 0) {
             Text(
-                text = "Producto desactivado",
+                text = "Sin Stock",
                 color = Color.Red,
                 style = MaterialTheme.typography.bodyMedium
             )

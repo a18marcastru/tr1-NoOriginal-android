@@ -7,6 +7,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 object RetrofitInstance {
+//    private const val BASE_URL = "http://localhost:3001/"
     private const val BASE_URL = "http://prejuicengo.dam.inspedralbes.cat:20869/"
 
     private val retrofit by lazy {
