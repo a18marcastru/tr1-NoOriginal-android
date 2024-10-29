@@ -27,7 +27,7 @@ class TakeAwayViewModel() : ViewModel() {
     var comandes = mutableStateOf<List<Comanda>?>(null)
         private set
 
-    private lateinit var mSocket: Socket
+    lateinit var mSocket: Socket
 
     // Creació de socket
     init {
@@ -90,6 +90,7 @@ class TakeAwayViewModel() : ViewModel() {
         }
         Log.d("SocketIO", "Updated product: $updatedProduct")
     }
+
 
     override fun onCleared() {
         super.onCleared()

@@ -20,7 +20,6 @@ import com.example.tr1.ui.screens.CompraScreen
 import com.example.tr1.ui.screens.ConfirmatScreen
 import com.example.tr1.ui.screens.LoginScreen
 import com.example.tr1.ui.screens.RegisterScreen
-import com.example.tr1.model.Comanda
 
 enum class TakeAwayApp(@StringRes val title: Int) {
     Login(title = R.string.login),
@@ -42,6 +41,7 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
     // Cargar productos desde la API cuando la app se inicia
     LaunchedEffect(Unit) {
         viewModel.loadProducts()
+        // viewModel.loadComandes()
         viewModel.comandes.value = emptyList()
     }
 
@@ -79,7 +79,7 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             if (selectedProduct != null) {
                 ProductScreen(navController, selectedProduct)
             } else {
-                Text("Producto no encontrado")
+                Text("Producte no trobat")
             }
         }
         composable(route = TakeAwayApp.Carret.name) {
@@ -89,7 +89,7 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             CompraScreen(navController)
         }
         composable(route = TakeAwayApp.Confirmat.name) {
-            ConfirmatScreen(navController)
+            ConfirmatScreen(navController, viewModel)
         }
     }
 }

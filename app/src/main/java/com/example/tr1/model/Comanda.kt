@@ -1,7 +1,5 @@
 package com.example.tr1.model
 
-import com.example.tr1.model.Product
-
 data class Comanda(
     val idComanda: Int,
     val idUsuari: Int,
