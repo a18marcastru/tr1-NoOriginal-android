@@ -28,88 +28,88 @@ class TakeAwayViewModel() : ViewModel() {
     var comandes = mutableStateOf<List<Comanda>?>(null)
         private set
 
-    lateinit var mSocket: Socket
+//    lateinit var mSocket: Socket
 
     // Creació de socket
-    init {
-        viewModelScope.launch {
-            try {
-//                mSocket = IO.socket("http://10.0.2.2:3010")
-//                val uri = URI.create("http://10.0.2.2:3010")
-//                val options = IO.Options.builder()
-//                    .build()
-//                mSocket = IO.socket(uri, options)
-                Log.d("SocketIO", mSocket.toString())
-                Log.d("SocketIO", "Connected to socket: ${mSocket.id()}")
-
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Log.e("SocketIO", "Failed to connect to socket", e)
-            }
-            mSocket.connect()
-
-            Log.i("SocketIO", Socket.EVENT_CONNECT)
-
-
-            mSocket.on(Socket.EVENT_CONNECT, onConnect)
+//    init {
+//        viewModelScope.launch {
+//            try {
+////                mSocket = IO.socket("http://10.0.2.2:3010")
+////                val uri = URI.create("http://10.0.2.2:3010")
+////                val options = IO.Options.builder()
+////                    .build()
+////                mSocket = IO.socket(uri, options)
+//                Log.d("SocketIO", mSocket.toString())
+//                Log.d("SocketIO", "Connected to socket: ${mSocket.id()}")
+//
+//
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//                Log.e("SocketIO", "Failed to connect to socket", e)
+//            }
+//            mSocket.connect()
+//
+//            Log.i("SocketIO", Socket.EVENT_CONNECT)
+//
+//
+//            mSocket.on(Socket.EVENT_CONNECT, onConnect)
 //            mSocket.on("new-product", onNewProduct)
 //            mSocket.on("delete-product", onDeleteProduct)
 //            mSocket.on("updated-product", onUpdatedProduct)
 //            mSocket.on(Socket.EVENT_DISCONNECT) {
-//                Log.d("SocketIO", "Disconnected from socket")
+//            Log.d("SocketIO", "Disconnected from socket")
 //            }
-
-
-        }
-    }
+//
+//
+//        }
+//    }
 
     // Events de socket
 
-    // Conecta a socket
-    private val onConnect = Emitter.Listener { args ->
-        Log.d("SocketIO", "Connected to socket")
-        Log.d("SocketIO", mSocket.toString())
-        Log.d("SocketIO", "Connected to socket: ${mSocket.id()}")
-
-    }
-
-    // En crear un producte
-    private val onNewProduct = Emitter.Listener { args ->
-        val productJson = args[0] as String
-        val newProduct = Gson().fromJson(productJson, Product::class.java)
-        products.value = products.value?.toMutableList()?.apply {
-            add(newProduct)
-        } ?: listOf(newProduct)
-        Log.d("SocketIO", "New product: $newProduct")
-    }
-
-    // En esborrar un producte
-    private val onDeleteProduct = Emitter.Listener { args ->
-        val productId = args[0].toString()
-        val deletedProduct = products.value?.find { it.idProducte == productId }
-        products.value = products.value?.filterNot { it.idProducte == productId }
-        Log.d("SocketIO", "Deleted product: $deletedProduct")
-    }
-
-    // En actualitzar un producte
-    private val onUpdatedProduct = Emitter.Listener { args ->
-        val productJson = args[0] as String
-        val updatedProduct = Gson().fromJson(productJson, Product::class.java)
-        products.value = products.value?.map { existingProduct ->
-            if (existingProduct.idProducte == updatedProduct.idProducte) {
-                updatedProduct
-            } else {
-                existingProduct
-            }
-        }
-        Log.d("SocketIO", "Updated product: $updatedProduct")
-    }
+//    // Conecta a socket
+//    private val onConnect = Emitter.Listener { args ->
+//        Log.d("SocketIO", "Connected to socket")
+//        Log.d("SocketIO", mSocket.toString())
+//        Log.d("SocketIO", "Connected to socket: ${mSocket.id()}")
+//
+//    }
+//
+//    // En crear un producte
+//    private val onNewProduct = Emitter.Listener { args ->
+//        val productJson = args[0] as String
+//        val newProduct = Gson().fromJson(productJson, Product::class.java)
+//        products.value = products.value?.toMutableList()?.apply {
+//            add(newProduct)
+//        } ?: listOf(newProduct)
+//        Log.d("SocketIO", "New product: $newProduct")
+//    }
+//
+//    // En esborrar un producte
+//    private val onDeleteProduct = Emitter.Listener { args ->
+//        val productId = args[0].toString()
+//        val deletedProduct = products.value?.find { it.idProducte == productId }
+//        products.value = products.value?.filterNot { it.idProducte == productId }
+//        Log.d("SocketIO", "Deleted product: $deletedProduct")
+//    }
+//
+//    // En actualitzar un producte
+//    private val onUpdatedProduct = Emitter.Listener { args ->
+//        val productJson = args[0] as String
+//        val updatedProduct = Gson().fromJson(productJson, Product::class.java)
+//        products.value = products.value?.map { existingProduct ->
+//            if (existingProduct.idProducte == updatedProduct.idProducte) {
+//                updatedProduct
+//            } else {
+//                existingProduct
+//            }
+//        }
+//        Log.d("SocketIO", "Updated product: $updatedProduct")
+//    }
 
 
     override fun onCleared() {
         super.onCleared()
-        mSocket.disconnect()
+    //    mSocket.disconnect()
         Log.d("SocketIO", "Disconnected from socket")
     }
 
