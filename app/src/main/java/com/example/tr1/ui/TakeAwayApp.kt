@@ -41,8 +41,8 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
     // Cargar productos desde la API cuando la app se inicia
     LaunchedEffect(Unit) {
         viewModel.loadProducts()
-        // viewModel.loadComandes()
-        viewModel.comandes.value = emptyList()
+        viewModel.loadComandes()
+//        viewModel.comandes.value = emptyList()
     }
 
     NavHost(navController, startDestination = TakeAwayApp.Login.name) {
