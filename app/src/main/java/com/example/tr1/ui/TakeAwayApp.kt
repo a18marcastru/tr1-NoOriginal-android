@@ -55,7 +55,7 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
         composable(route = TakeAwayApp.Menu.name) {
             val products = viewModel.products.value
             if (products != null) {
-                MenuScreen(navController, products)
+                MenuScreen(navController, products, viewModel) // Pasar el ViewModel aquí
             } else {
                 Text("Carregant productes...")
             }

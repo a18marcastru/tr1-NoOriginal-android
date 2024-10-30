@@ -1,35 +1,33 @@
-import android.media.Image
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import com.example.tr1.R
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.rememberAsyncImagePainter
+import com.example.tr1.R
 import com.example.tr1.model.Product
 import com.example.tr1.ui.TakeAwayApp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import coil.request.CachePolicy
+import coil.request.ImageRequest
+import com.example.tr1.ui.TakeAwayViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun MenuScreen(navController: NavHostController, products: List<Product>) {
+fun MenuScreen(navController: NavHostController, products: List<Product>, viewModel: TakeAwayViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -55,24 +53,26 @@ fun MenuScreen(navController: NavHostController, products: List<Product>) {
             }
         }
     ) { padding ->
-        LazyColumn(
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            items(products) { product ->
-                ProductCardScreen(product = product) {
-                    navController.navigate("productScreen/${product.nomProducte}") // Navegar a la pantalla del producto
+            items(products.size) { index ->
+                val product = products[index]
+                ProductCardScreen(product = product, onClick = {
+                    navController.navigate("productScreen/${product.nomProducte}")
+                }, viewModel)
                 }
-                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
-}
+
 
 @Composable
-fun ProductCardScreen(product: Product, onClick: () -> Unit) {
+fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAwayViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -80,7 +80,17 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit) {
             .padding(16.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        val painter = rememberAsyncImagePainter(model = product.Imatge)
+        val painter = rememberAsyncImagePainter(
+            ImageRequest.Builder(LocalContext.current)
+                .data(data = product.Imatge)
+                .apply {
+                    diskCachePolicy(CachePolicy.ENABLED)
+                    crossfade(true)
+                    placeholder(R.drawable.ic_launcher_background)
+//                    error(R.drawable.error_image)
+                }
+                .build()
+        )
         Image(
             painter = painter,
             contentDescription = product.nomProducte,
@@ -101,13 +111,35 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit) {
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        if (product.Stock == 0) {
+            Text(
+                text = "Sin Stock",
+                color = Color.Red,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }else{
+            Text(
+                text = "En stock",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Green
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Precio: \$${product.Preu}",
             style = MaterialTheme.typography.bodyMedium
         )
-        Text(
-            text = "Stock: ${product.Stock}",
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = { viewModel.addToCart(product) },
+            enabled = product.Stock != 0,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (product.Stock == 0) Color.Red else MaterialTheme.colorScheme.primary
+            )
+        ) {
+            Text(text = "Afegir")
+        }
+        }
     }
-}
