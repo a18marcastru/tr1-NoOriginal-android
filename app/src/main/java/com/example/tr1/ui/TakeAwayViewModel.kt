@@ -122,9 +122,15 @@ class TakeAwayViewModel() : ViewModel() {
     fun loginViewModel(email: String, password: String) {
         viewModelScope.launch {
             val loginRequest = LoginRequest(email, password)
-            login(loginRequest) { loginResponse, _ ->
-                if (loginResponse != null && loginResponse.Confirmacio) {
+            loginError.value = null
+
+            login(loginRequest) { loginResponse, throwable ->
+                Log.d("login", "$loginResponse")
+                if(throwable != null) {
+                    Log.e("login", "Error de red: ${throwable.message}")
+                } else if (loginResponse != null && loginResponse.Confirmacio) {
                     // Login successful
+                    Log.d("login", "Credenciales correctas")
                     val user = Usuari(
                         loginResponse.idUser.toString(),
                         loginResponse.Nom,
@@ -134,6 +140,7 @@ class TakeAwayViewModel() : ViewModel() {
                     currentUser.value = user
                     loginError.value = null
                 } else {
+                    Log.d("login", "Credenciales incorrectas")
                     loginError.value = "Correu o contrasenya incorrectes"
                 }
             }

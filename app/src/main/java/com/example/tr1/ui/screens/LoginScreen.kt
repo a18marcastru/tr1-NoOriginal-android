@@ -1,6 +1,7 @@
 package com.example.tr1.ui.screens
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -74,29 +76,42 @@ fun LoginScreen(navController: NavHostController, context: Context, viewModel: T
 
         // Botón de inicio de sesión
         Button(onClick = {
-            viewModel.loginViewModel(email, password)
-            if (viewModel.loginError.value == null) {
-                // Iniciar sesión y navegar a la pantalla del menú
-                navController.navigate(TakeAwayApp.Menu.name)
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                viewModel.loginViewModel(email, password)
+            }
+            else {
+                Toast.makeText(context, "Correu o Contrasenya buida", Toast.LENGTH_SHORT).show()
             }
         }) {
             Text(text = "Iniciar")
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         // Mensaje de error si el inicio de sesión falla
-        viewModel.loginError.value?.let {
-            Text(
-                text = it,
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-        }
+//        viewModel.loginError.value?.let {
+//            Text(
+//                text = it,
+//                color = MaterialTheme.colorScheme.error,
+//                modifier = Modifier.padding(top = 8.dp)
+//            )
+//        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // Botón para registrarse
         Button(onClick = { navController.navigate(TakeAwayApp.Register.name) }) {
             Text(text = "Registrar")
+        }
+
+        LaunchedEffect(viewModel.loginError.value, viewModel.currentUser.value) {
+            viewModel.loginError.value?.let { error ->
+                // Mostrar mensaje de error en un Toast si loginError contiene un mensaje
+                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            } ?: viewModel.currentUser.value?.let {
+                // Si currentUser tiene un valor, significa que el inicio de sesión fue exitoso
+                navController.navigate(TakeAwayApp.Menu.name)
+            }
         }
     }
 }

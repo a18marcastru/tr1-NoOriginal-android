@@ -14,8 +14,8 @@ data class UsuarisResponse(
 )
 
 data class LoginRequest(
-    val email: String,
-    val password: String
+    val Correu: String,
+    val Contrasenya: String
 )
 
 data class LoginResponse(

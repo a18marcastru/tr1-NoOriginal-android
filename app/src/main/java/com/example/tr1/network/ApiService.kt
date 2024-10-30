@@ -33,6 +33,6 @@ interface TakeAwayApi {
     @GET("getComandesBD")
     fun getComandes(): Call<ComandesResponse>
 
-    @POST("login")
+    @POST("loginBD")
     fun login(@Body loginRequest: LoginRequest): Call<LoginResponse>
 }
