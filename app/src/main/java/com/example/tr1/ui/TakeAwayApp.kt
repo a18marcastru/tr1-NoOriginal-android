@@ -41,6 +41,8 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
     // Cargar productos desde la API cuando la app se inicia
     LaunchedEffect(Unit) {
         viewModel.loadProducts()
+        // viewModel.loadComandes()
+        viewModel.comandes.value = emptyList()
     }
 
     NavHost(navController, startDestination = TakeAwayApp.Login.name) {
@@ -55,14 +57,19 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             if (products != null) {
                 MenuScreen(navController, products)
             } else {
-                Text("Cargando productos...")
+                Text("Carregant productes...")
             }
         }
         composable(route = TakeAwayApp.Perfil.name) {
             PerfilScreen(navController)
         }
         composable(route = TakeAwayApp.Comandes.name) {
-            ComandesScreen(navController)
+            val comandes = viewModel.comandes.value
+            if (comandes != null) {
+                ComandesScreen(navController, comandes)
+            } else {
+                Text("Carregant comandes...")
+            }
         }
         composable(route = "productScreen/{productId}",
             arguments = listOf(navArgument("productId") { type = NavType.StringType })) { backStackEntry ->
@@ -72,7 +79,7 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             if (selectedProduct != null) {
                 ProductScreen(navController, selectedProduct, viewModel) // Pasar el ViewModel aquí
             } else {
-                Text("Producto no encontrado")
+                Text("Producte no trobat")
             }
         }
         composable(route = TakeAwayApp.Carret.name) {
@@ -82,7 +89,7 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             CompraScreen(navController)
         }
         composable(route = TakeAwayApp.Confirmat.name) {
-            ConfirmatScreen(navController)
+            ConfirmatScreen(navController, viewModel)
         }
     }
 }

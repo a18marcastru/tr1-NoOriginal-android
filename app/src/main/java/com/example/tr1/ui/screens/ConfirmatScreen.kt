@@ -15,14 +15,18 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.tr1.ui.TakeAwayApp
+import com.example.tr1.ui.TakeAwayViewModel
 
 //Pantalla de confirmació
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConfirmatScreen(navController: NavHostController) {
+fun ConfirmatScreen(navController: NavHostController, viewModel: TakeAwayViewModel) {
+    viewModel.mSocket.emit("new-comanda")
     Scaffold(
         topBar = {
             TopAppBar(
@@ -38,7 +42,7 @@ fun ConfirmatScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Compra completada amb exit!",
+                text = "Compra completada amb èxit!",
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -47,4 +51,10 @@ fun ConfirmatScreen(navController: NavHostController) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ConfirmatScreenPreview() {
+    ConfirmatScreen(navController = NavHostController(LocalContext.current), viewModel = TakeAwayViewModel())
 }

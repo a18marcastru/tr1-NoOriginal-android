@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.tr1.model.ProductesResponse
 import android.util.Log
 import com.example.tr1.R
+import com.example.tr1.model.ComandesResponse
 import com.example.tr1.model.Usuari
 import com.example.tr1.model.UsuarisResponse
 import com.example.tr1.network.RetrofitInstance
@@ -32,6 +33,26 @@ fun loadProductsFromApi(onProductsLoaded: (ProductesResponse?) -> Unit) {
             // Logueamos el error en caso de fallo de conexión y devolvemos null
             Log.e("TakeAwayApp", "Error de conexión: ${t.message}")
             onProductsLoaded(null)
+        }
+    })
+}
+
+fun loadComandesFromApi(onComandesLoaded: (ComandesResponse?) -> Unit) {
+    val call = RetrofitInstance.api.getComandes() // Assuming you have an API endpoint for comandes
+
+    call.enqueue(object : Callback<ComandesResponse> {
+        override fun onResponse(call: Call<ComandesResponse>, response: Response<ComandesResponse>) {
+            if (response.isSuccessful) {
+                onComandesLoaded(response.body())
+            } else {
+                Log.e("TakeAwayApp", "Error en la respuesta: ${response.code()}")
+                onComandesLoaded(null)
+            }
+        }
+
+        override fun onFailure(call: Call<ComandesResponse>, t: Throwable) {
+            Log.e("TakeAwayApp", "Error de conexión: ${t.message}")
+            onComandesLoaded(null)
         }
     })
 }

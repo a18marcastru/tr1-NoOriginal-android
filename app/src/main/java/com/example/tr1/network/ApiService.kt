@@ -1,5 +1,6 @@
 package com.example.tr1.network
 
+import com.example.tr1.model.ComandesResponse
 import com.example.tr1.model.ProductesResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -24,4 +25,7 @@ object RetrofitInstance {
 interface TakeAwayApi {
     @GET("getProductesBD") // Cambia esto a la ruta de tu endpoint
     fun getProducts(): Call<ProductesResponse>
+
+    @GET("getComandesBD") // Cambia esto a la ruta de tu endpoint
+    fun getComandes(): Call<ComandesResponse>
 }
