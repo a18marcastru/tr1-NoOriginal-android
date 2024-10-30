@@ -26,7 +26,7 @@ import com.example.tr1.ui.TakeAwayViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfirmatScreen(navController: NavHostController, viewModel: TakeAwayViewModel) {
-    //viewModel.mSocket.emit("new-comanda")
+    viewModel.mSocket.emit("new-comanda")
     Scaffold(
         topBar = {
             TopAppBar(
