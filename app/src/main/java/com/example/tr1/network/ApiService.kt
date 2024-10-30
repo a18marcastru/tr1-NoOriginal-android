@@ -8,7 +8,7 @@ import retrofit2.http.GET
 
 object RetrofitInstance {
 //    private const val BASE_URL = "http://localhost:3001/"
-    private const val BASE_URL = "http://prejuicengo.dam.inspedralbes.cat:20869/"
+    private const val BASE_URL = "http://prejuicengo.dam.inspedralbes.cat:20870/"
 
     private val retrofit by lazy {
         Retrofit.Builder()
@@ -25,4 +25,6 @@ object RetrofitInstance {
 interface TakeAwayApi {
     @GET("getProductesBD") // Cambia esto a la ruta de tu endpoint
     fun getProducts(): Call<ProductesResponse>
+
+
 }
