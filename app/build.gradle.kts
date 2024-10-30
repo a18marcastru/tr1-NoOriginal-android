@@ -62,10 +62,9 @@ dependencies {
     implementation("io.coil-kt:coil:2.4.0")
     implementation ("androidx.recyclerview:recyclerview:1.0.0")
     implementation ("com.google.code.gson:gson:2.8.5")
-    implementation ("org.jetbrains.anko:anko:0.10.8")
     implementation(libs.engage.core)
     implementation("org.json:json:20230227")
-    implementation("io.socket:socket.io-client:2.1.0")
+    implementation ("io.socket:socket.io-client:2.1.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")

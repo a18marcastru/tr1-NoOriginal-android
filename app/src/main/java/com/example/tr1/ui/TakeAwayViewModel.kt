@@ -15,6 +15,7 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.coroutines.launch
+import java.net.URI
 
 class TakeAwayViewModel() : ViewModel() {
 
@@ -33,22 +34,33 @@ class TakeAwayViewModel() : ViewModel() {
     init {
         viewModelScope.launch {
             try {
-                mSocket = IO.socket("http://10.0.2.2:3000")
-                mSocket.connect()
-
-                mSocket.on(Socket.EVENT_CONNECT, onConnect)
-                mSocket.on("new-product", onNewProduct)
-                mSocket.on("delete-product", onDeleteProduct)
-                mSocket.on("updated-product", onUpdatedProduct)
-                mSocket.on(Socket.EVENT_DISCONNECT) {
-                    Log.d("SocketIO", "Disconnected from socket")
-                }
-
+//                mSocket = IO.socket("http://10.0.2.2:3010")
+//                val uri = URI.create("http://10.0.2.2:3010")
+//                val options = IO.Options.builder()
+//                    .build()
+//                mSocket = IO.socket(uri, options)
+                Log.d("SocketIO", mSocket.toString())
                 Log.d("SocketIO", "Connected to socket: ${mSocket.id()}")
+
+
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.e("SocketIO", "Failed to connect to socket", e)
             }
+            mSocket.connect()
+
+            Log.i("SocketIO", Socket.EVENT_CONNECT)
+
+
+            mSocket.on(Socket.EVENT_CONNECT, onConnect)
+//            mSocket.on("new-product", onNewProduct)
+//            mSocket.on("delete-product", onDeleteProduct)
+//            mSocket.on("updated-product", onUpdatedProduct)
+//            mSocket.on(Socket.EVENT_DISCONNECT) {
+//                Log.d("SocketIO", "Disconnected from socket")
+//            }
+
+
         }
     }
 
@@ -57,6 +69,9 @@ class TakeAwayViewModel() : ViewModel() {
     // Conecta a socket
     private val onConnect = Emitter.Listener { args ->
         Log.d("SocketIO", "Connected to socket")
+        Log.d("SocketIO", mSocket.toString())
+        Log.d("SocketIO", "Connected to socket: ${mSocket.id()}")
+
     }
 
     // En crear un producte
