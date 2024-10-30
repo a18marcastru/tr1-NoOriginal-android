@@ -1,15 +1,16 @@
 package com.example.tr1.ui
 
-import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tr1.data.loadComandesFromApi
 import com.example.tr1.data.loadProductsFromApi
-import com.example.tr1.data.loadUsuarisFromJson
+import com.example.tr1.data.login
 import com.example.tr1.model.Comanda
+import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.Product
+import com.example.tr1.model.Usuari
 import com.google.gson.Gson
 import io.socket.client.IO
 import io.socket.client.Socket
@@ -25,6 +26,9 @@ class TakeAwayViewModel() : ViewModel() {
         private set
 
     var comandes = mutableStateOf<List<Comanda>?>(null)
+        private set
+
+    var currentUser = mutableStateOf<Usuari?>(null)
         private set
 
     lateinit var mSocket: Socket
@@ -115,19 +119,24 @@ class TakeAwayViewModel() : ViewModel() {
         }
     }
 
-    fun login(username: String, password: String, context: Context) {
-        val usuaris = loadUsuarisFromJson(context) // Cambia esto a tu forma de cargar usuarios
-        val userFound = usuaris?.find { it.Nom == username && it.Contrasenya == password }
-
-        if (userFound != null) {
-            loginError.value = null // Reinicia el error al iniciar sesión correctamente
-        } else {
-            loginError.value = "Usuario o contraseña incorrectos"
+    fun loginViewModel(email: String, password: String) {
+        viewModelScope.launch {
+            val loginRequest = LoginRequest(email, password)
+            login(loginRequest) { loginResponse, _ ->
+                if (loginResponse != null && loginResponse.Confirmacio) {
+                    // Login successful
+                    val user = Usuari(
+                        loginResponse.idUser.toString(),
+                        loginResponse.Nom,
+                        loginResponse.Correu,
+                        loginResponse.Contrasenya
+                    )
+                    currentUser.value = user
+                    loginError.value = null
+                } else {
+                    loginError.value = "Correu o contrasenya incorrectes"
+                }
+            }
         }
-    }
-
-    fun resetState() {
-        products.value = null
-        loginError.value = null
     }
 }

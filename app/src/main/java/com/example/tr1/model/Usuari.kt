@@ -12,3 +12,17 @@ data class Usuari(
 data class UsuarisResponse(
     val usuaris: List<Usuari>
 )
+
+data class LoginRequest(
+    val email: String,
+    val password: String
+)
+
+data class LoginResponse(
+    val idUser: Int,
+    val Nom: String,
+    val Correu: String,
+    val Contrasenya: String,
+    val Targeta: String,
+    val Confirmacio: Boolean
+)

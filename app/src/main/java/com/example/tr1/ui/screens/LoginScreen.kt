@@ -19,10 +19,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.tr1.R
 import com.example.tr1.ui.TakeAwayApp
 import com.example.tr1.ui.TakeAwayViewModel
@@ -30,7 +33,7 @@ import com.example.tr1.ui.TakeAwayViewModel
 @Composable
 fun LoginScreen(navController: NavHostController, context: Context, viewModel: TakeAwayViewModel) {
     // Variables de estado para capturar la entrada del usuario
-    var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Column(
@@ -46,9 +49,9 @@ fun LoginScreen(navController: NavHostController, context: Context, viewModel: T
 
         // Campo para el nombre de usuario
         TextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text(text = "Usuario") },
+            value = email,
+            onValueChange = { email = it },
+            label = { Text(text = "Correu Electrònic") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 15.dp)
@@ -60,7 +63,7 @@ fun LoginScreen(navController: NavHostController, context: Context, viewModel: T
         TextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text(text = "Contraseña") },
+            label = { Text(text = "Contrasenya") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
                 .fillMaxWidth()
@@ -71,7 +74,7 @@ fun LoginScreen(navController: NavHostController, context: Context, viewModel: T
 
         // Botón de inicio de sesión
         Button(onClick = {
-            viewModel.login(username, password, context)
+            viewModel.loginViewModel(email, password)
             if (viewModel.loginError.value == null) {
                 // Iniciar sesión y navegar a la pantalla del menú
                 navController.navigate(TakeAwayApp.Menu.name)
@@ -96,4 +99,10 @@ fun LoginScreen(navController: NavHostController, context: Context, viewModel: T
             Text(text = "Registrar")
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenPreview() {
+    LoginScreen(navController = rememberNavController(), context = LocalContext.current, viewModel = TakeAwayViewModel())
 }
