@@ -4,6 +4,7 @@ import MenuScreen
 import PerfilScreen
 import ProductScreen
 import android.content.Context
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -41,7 +42,6 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
     // Cargar productos desde la API cuando la app se inicia
     LaunchedEffect(Unit) {
         viewModel.loadProducts()
-        // viewModel.loadComandes()
         viewModel.comandes.value = emptyList()
     }
 
@@ -64,12 +64,15 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             PerfilScreen(navController)
         }
         composable(route = TakeAwayApp.Comandes.name) {
+            LaunchedEffect(Unit) {
+                viewModel.loadComandes()
+                Log.d("comandes", "Comandes: ${viewModel.comandes.value}")
+            }
             val comandes = viewModel.comandes.value
             if (comandes != null) {
                 ComandesScreen(navController, comandes)
-            } else {
-                Text("Carregant comandes...")
             }
+
         }
         composable(route = "productScreen/{productId}",
             arguments = listOf(navArgument("productId") { type = NavType.StringType })) { backStackEntry ->

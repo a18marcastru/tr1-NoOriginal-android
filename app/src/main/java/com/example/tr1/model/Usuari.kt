@@ -1,9 +1,7 @@
 package com.example.tr1.model
 
-// Esto es del user.json, eliminar mas tarde
-
 data class Usuari(
-    val idNom: String,
+    val idUser: Int,
     val Nom: String,
     val Correu: String,
     val Contrasenya: String

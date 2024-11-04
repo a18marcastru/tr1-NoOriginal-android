@@ -111,9 +111,9 @@ class TakeAwayViewModel() : ViewModel() {
 
     fun loadComandes() {
         viewModelScope.launch {
-            loadComandesFromApi { comandesResponse ->
+            loadComandesFromApi(currentUser.value?.idUser.toString()) { comandesResponse ->
                 comandesResponse?.let {
-                    comandes.value = it.comandes
+                    comandes.value = it.Comandes
                 }
             }
         }
@@ -132,7 +132,7 @@ class TakeAwayViewModel() : ViewModel() {
                     // Login successful
                     Log.d("login", "Credenciales correctas")
                     val user = Usuari(
-                        loginResponse.idUser.toString(),
+                        loginResponse.idUser,
                         loginResponse.Nom,
                         loginResponse.Correu,
                         loginResponse.Contrasenya

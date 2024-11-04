@@ -1,9 +1,11 @@
 package com.example.tr1.network
 
+
 import com.example.tr1.model.ComandesResponse
 import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.LoginResponse
 import com.example.tr1.model.ProductesResponse
+import retrofit2.http.Path
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
@@ -30,8 +32,8 @@ interface TakeAwayApi {
     @GET("getProductesBD")
     fun getProducts(): Call<ProductesResponse>
 
-    @GET("getComandesBD")
-    fun getComandes(): Call<ComandesResponse>
+    @GET("getHistorialComandes/{id}")
+    fun getComandes(@Path("id") idUsuari: String): Call<ComandesResponse>
 
     @POST("loginBD")
     fun login(@Body loginRequest: LoginRequest): Call<LoginResponse>

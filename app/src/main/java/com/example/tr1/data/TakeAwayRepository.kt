@@ -39,15 +39,16 @@ fun loadProductsFromApi(onProductsLoaded: (ProductesResponse?) -> Unit) {
     })
 }
 
-fun loadComandesFromApi(onComandesLoaded: (ComandesResponse?) -> Unit) {
-    val call = RetrofitInstance.api.getComandes() // Assuming you have an API endpoint for comandes
-
+fun loadComandesFromApi(idUsuari: String, onComandesLoaded: (ComandesResponse?) -> Unit) {
+    val call = RetrofitInstance.api.getComandes(idUsuari)
+    Log.d("comandes", "ID d'usuari: $idUsuari")
     call.enqueue(object : Callback<ComandesResponse> {
         override fun onResponse(call: Call<ComandesResponse>, response: Response<ComandesResponse>) {
             if (response.isSuccessful) {
                 onComandesLoaded(response.body())
+                Log.d("comandes", "Respuesta exitosa: ${response.body()}")
             } else {
-                Log.e("TakeAwayApp", "Error en la respuesta: ${response.code()}")
+                Log.e("comandes", "Error en la respuesta: ${response.code()}")
                 onComandesLoaded(null)
             }
         }

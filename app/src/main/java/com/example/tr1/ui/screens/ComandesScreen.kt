@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -30,7 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tr1.R
 import com.example.tr1.model.Comanda
 import com.example.tr1.model.EstatComanda
-import com.example.tr1.model.Product
+import com.example.tr1.model.ProductePerComanda
 import com.example.tr1.ui.TakeAwayApp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,80 +74,54 @@ fun ComandaItem(comanda: Comanda) {
             .padding(16.dp),
         horizontalAlignment = Alignment.Start
     ) {
+        Text(text = "Productes:")
+        comanda.Productes.forEach { producte ->
+            Text(text = "Nom: ${producte.nomProducte}")
+            Text(text = "Quantitat: ${producte.quantitat}")
+            Text(text = "Preu Total del Producte: ${producte.preuTotalProducte}")
+            Spacer(modifier = Modifier.height(8.dp))
+        }
         Text(
-            text = "nomUsuariExemple",
-            style = MaterialTheme.typography.titleMedium,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(
-            text = "Preu Total: ${comanda.preuTotal}",
+            text = "Preu Total: ${comanda.PreuTotal}",
             style = MaterialTheme.typography.bodyMedium
         )
         Text(
-            text = "Estat: ${comanda.estat}",
+            text = "Estat: ${comanda.Estat}",
             style = MaterialTheme.typography.bodyMedium
         )
         Text(
-            text = "Data: ${comanda.data}",
+            text = "Data: ${comanda.Data}",
             style = MaterialTheme.typography.bodyMedium
         )
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
 fun ComandesScreenPreview() {
     val comanda1 = Comanda(
         idComanda = 1,
-        idUsuari = 123,
-        productes = listOf(
-            Product(
-                idProducte = 1.toString(),
-                nomProducte = "Pizza Margarita",
-                Descripcio = "Deliciosa pizza con tomate, mozzarella y albahaca.",
-                Preu = 10.50,
-                Stock = 20,
-                Imatge = "https://example.com/pizza-margarita.jpg"
-            ),
-            Product(
-                idProducte = 2.toString(),
-                nomProducte = "Refresco Cola",
-                Descripcio = "Refrescante bebida de cola.",
-                Preu = 2.00,
-                Stock = 50,
-                Imatge = "https://example.com/refresco-cola.jpg"
-            )
+        idUsuari = 1,
+        Productes = listOf(
+            ProductePerComanda(idProducte = 1, nomProducte = "Hamburguesa", quantitat = 1, preuTotalProducte = 8.00),
+            ProductePerComanda(idProducte = 1, nomProducte = "Hamburguesa", quantitat = 1, preuTotalProducte = 8.00)
         ),
-        preuTotal = 12.50,
-        estat = EstatComanda.PENDENT_DE_PREPARACIO,
-        data = "2023-10-27T10:00:00"
+        PreuTotal = 16.50,
+        Estat = EstatComanda.EN_PREPARACIO,
+        Data = "2023-11-19"
     )
 
     val comanda2 = Comanda(
-        idComanda = 1,
-        idUsuari = 123,
-        productes = listOf(
-            Product(
-                idProducte = 1.toString(),
-                nomProducte = "Pizza Margarita",
-                Descripcio = "Deliciosa pizza con tomate, mozzarella y albahaca.",
-                Preu = 10.50,
-                Stock = 20,
-                Imatge = "https://example.com/pizza-margarita.jpg"
-            ),
-            Product(
-                idProducte = 2.toString(),
-                nomProducte = "Refresco Cola",
-                Descripcio = "Refrescante bebida de cola.",
-                Preu = 2.00,
-                Stock = 50,
-                Imatge = "https://example.com/refresco-cola.jpg"
-            )
+        idComanda = 2,
+        idUsuari = 1,
+        Productes = listOf(
+            ProductePerComanda(idProducte = 1, nomProducte = "Hamburguesa", quantitat = 1, preuTotalProducte = 8.00),
+            ProductePerComanda(idProducte = 1, nomProducte = "Hamburguesa", quantitat = 1, preuTotalProducte = 8.00)
         ),
-        preuTotal = 12.50,
-        estat = EstatComanda.PENDENT_DE_PREPARACIO,
-        data = "2023-10-27T10:00:00"
+        PreuTotal = 11.50,
+        Estat = EstatComanda.RECOLLIT,
+        Data = "2023-11-19"
     )
     ComandesScreen(navController = rememberNavController(), commands = listOf(comanda1, comanda2))
 }
