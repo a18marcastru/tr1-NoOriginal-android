@@ -4,6 +4,8 @@ import com.example.tr1.model.ComandesResponse
 import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.LoginResponse
 import com.example.tr1.model.ProductesResponse
+import com.example.tr1.model.RegisterResponse
+import com.example.tr1.model.registerRequest
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
@@ -34,6 +36,13 @@ interface TakeAwayApi {
     @GET("getComandesBD") // Cambia esto a la ruta de tu endpoint
     fun getComandes(): Call<ComandesResponse>
 
+//    @GET("postComandaBD") // Cambia esto a la ruta de tu endpoint
+//    fun postComanda(): Call<ComandesResponse>
+
     @POST("loginBD")
     fun login(@Body loginRequest: LoginRequest): Call<LoginResponse>
+
+    @POST("RegisterBD")
+    fun register(@Body registerRequest: registerRequest): Call<RegisterResponse>
+
 }

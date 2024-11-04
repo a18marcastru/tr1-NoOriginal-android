@@ -7,8 +7,10 @@ import com.example.tr1.R
 import com.example.tr1.model.ComandesResponse
 import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.LoginResponse
+import com.example.tr1.model.RegisterResponse
 import com.example.tr1.model.Usuari
 import com.example.tr1.model.UsuarisResponse
+import com.example.tr1.model.registerRequest
 import com.example.tr1.network.RetrofitInstance
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
@@ -75,6 +77,26 @@ fun login(loginRequest: LoginRequest, onLoginResult: (LoginResponse?, Throwable?
         override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
             Log.e("TakeAwayApp", "Login failed: ${t.message}")
             onLoginResult(null, t)
+        }
+    })
+}
+
+fun register(registerRequest: registerRequest, onRegisterResult: (RegisterResponse?, Throwable?) -> Unit) {
+    val call = RetrofitInstance.api.register(registerRequest)
+
+    call.enqueue(object : Callback<RegisterResponse> {
+        override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
+            if (response.isSuccessful) {
+                onRegisterResult(response.body(), null)
+            } else {
+                Log.e("TakeAwayApp", "Register error: ${response.code()}")
+                onRegisterResult(null, null) // or create a custom exception
+            }
+        }
+
+        override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+            Log.e("TakeAwayApp", "Register failed: ${t.message}")
+            onRegisterResult(null, t)
         }
     })
 }

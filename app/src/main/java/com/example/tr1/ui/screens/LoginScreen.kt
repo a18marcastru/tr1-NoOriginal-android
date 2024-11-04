@@ -80,7 +80,7 @@ fun LoginScreen(navController: NavHostController, context: Context, viewModel: T
                 viewModel.loginViewModel(email, password)
             }
             else {
-                Toast.makeText(context, "Correu o Contrasenya buida", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "Correu o Contrasenya buida", Toast.LENGTH_SHORT).show()
             }
         }) {
             Text(text = "Iniciar")

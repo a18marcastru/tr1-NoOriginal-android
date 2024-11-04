@@ -50,7 +50,7 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             LoginScreen(navController, context, viewModel)
         }
         composable(route = TakeAwayApp.Register.name) {
-            RegisterScreen(navController)
+            RegisterScreen(navController, context, viewModel)
         }
         composable(route = TakeAwayApp.Menu.name) {
             val products = viewModel.products.value
