@@ -64,7 +64,8 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.8.5")
     implementation(libs.engage.core)
     implementation("org.json:json:20230227")
-    implementation("io.socket:socket.io-client:2.1.0")
+    implementation ("io.socket:socket.io-client:2.1.1")
+    implementation(libs.firebase.firestore.ktx)
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")

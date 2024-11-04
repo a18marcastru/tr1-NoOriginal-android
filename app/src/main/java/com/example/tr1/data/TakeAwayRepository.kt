@@ -5,6 +5,8 @@ import com.example.tr1.model.ProductesResponse
 import android.util.Log
 import com.example.tr1.R
 import com.example.tr1.model.ComandesResponse
+import com.example.tr1.model.LoginRequest
+import com.example.tr1.model.LoginResponse
 import com.example.tr1.model.Usuari
 import com.example.tr1.model.UsuarisResponse
 import com.example.tr1.network.RetrofitInstance
@@ -57,7 +59,27 @@ fun loadComandesFromApi(onComandesLoaded: (ComandesResponse?) -> Unit) {
     })
 }
 
-fun loadUsuarisFromJson(context: Context): List<Usuari>? {
+fun login(loginRequest: LoginRequest, onLoginResult: (LoginResponse?, Throwable?) -> Unit) {
+    val call = RetrofitInstance.api.login(loginRequest)
+
+    call.enqueue(object : Callback<LoginResponse> {
+        override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+            if (response.isSuccessful) {
+                onLoginResult(response.body(), null)
+            } else {
+                Log.e("TakeAwayApp", "Login error: ${response.code()}")
+                onLoginResult(null, null) // or create a custom exception
+            }
+        }
+
+        override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+            Log.e("TakeAwayApp", "Login failed: ${t.message}")
+            onLoginResult(null, t)
+        }
+    })
+}
+
+fun loadUsuarisFromJson(context: Context): List<Usuari> {
     val jsonString = context.resources.openRawResource(R.raw.users)
         .bufferedReader().use { it.readText() }
 
