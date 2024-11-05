@@ -55,7 +55,7 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
         composable(route = TakeAwayApp.Menu.name) {
             val products = viewModel.products.value
             if (products != null) {
-                MenuScreen(navController, products)
+                MenuScreen(navController, products) // Pasar el ViewModel aquí
             } else {
                 Text("Carregant productes...")
             }
@@ -80,13 +80,13 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             val products = viewModel.products.value
             val selectedProduct = products?.find { it.nomProducte == productId }
             if (selectedProduct != null) {
-                ProductScreen(navController, selectedProduct)
+                ProductScreen(navController, selectedProduct) // Pasar el ViewModel aquí
             } else {
                 Text("Producte no trobat")
             }
         }
         composable(route = TakeAwayApp.Carret.name) {
-            CarretScreen(navController)
+            CarretScreen(navController) // Pasar el ViewModel aquí también
         }
         composable(route = TakeAwayApp.Compra.name) {
             CompraScreen(navController)

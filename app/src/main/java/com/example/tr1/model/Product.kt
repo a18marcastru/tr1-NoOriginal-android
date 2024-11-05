@@ -6,7 +6,8 @@ data class Product(
     val Descripcio: String,
     val Preu: Double,
     val Stock: Int,
-    val Imatge: String
+    val Imatge: String,
+    var quantity: Int = 1
 )
 
 data class ProductesResponse(

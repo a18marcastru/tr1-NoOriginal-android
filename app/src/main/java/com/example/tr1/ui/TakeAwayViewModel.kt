@@ -1,5 +1,7 @@
 package com.example.tr1.ui
 
+import android.content.Context
+import androidx.compose.runtime.mutableStateListOf
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -23,6 +25,9 @@ class TakeAwayViewModel() : ViewModel() {
         private set
 
     var loginError = mutableStateOf<String?>(null)
+        private set
+
+    var cartProducts = mutableStateListOf<Product>()
         private set
 
     var comandes = mutableStateOf<List<Comanda>?>(null)
@@ -104,9 +109,48 @@ class TakeAwayViewModel() : ViewModel() {
             loadProductsFromApi { productesResponse ->
                 productesResponse?.let {
                     products.value = it.productes
+                    println(products.value)
                 }
             }
         }
+    }
+
+    fun incrementProductQuantity(product: Product) {
+        val index = cartProducts.indexOf(product)
+
+        if(index != -1){
+            cartProducts[index] = cartProducts[index].copy(quantity = cartProducts[index].quantity + 1)
+        }
+    }
+
+    fun decrementProductQuantity(product: Product) {
+        val index = cartProducts.indexOf(product)
+
+        if(index != 1 && cartProducts[index].quantity > 1){
+            cartProducts[index] = cartProducts[index].copy(quantity = cartProducts[index].quantity - 1)
+        }
+    }
+
+    fun addToCart(product: Product) {
+        val existingProduct = cartProducts.find { it.nomProducte == product.nomProducte }
+        if(existingProduct != null){
+            incrementProductQuantity(existingProduct)
+        }else{
+            cartProducts.add(product.copy(quantity = 1))
+        }
+
+    }
+
+    fun resetCart() {
+        cartProducts.clear()
+    }
+
+    fun getTotalPrice(): Double{
+        return cartProducts.sumOf { it.Preu * it.quantity }
+    }
+
+    fun removeProductFromCart(product: Product) {
+        cartProducts.remove(product) // Elimina el producto especificado
     }
 
     fun loadComandes() {

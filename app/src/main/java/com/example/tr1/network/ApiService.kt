@@ -1,6 +1,5 @@
 package com.example.tr1.network
 
-
 import com.example.tr1.model.ComandesResponse
 import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.LoginResponse
@@ -15,6 +14,7 @@ import retrofit2.http.POST
 
 object RetrofitInstance {
     private const val BASE_URL = "http://10.0.2.2:3010/"
+//    private const val BASE_URL = "http://prejuicengo.dam.inspedralbes.cat:20869/"
 
     private val retrofit by lazy {
         Retrofit.Builder()
