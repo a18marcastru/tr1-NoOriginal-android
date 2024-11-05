@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,7 +39,12 @@ fun ComandesScreen(navController: NavHostController, commands: List<Comanda>) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.comandes)) }
+                title = { Text(text = stringResource(id = R.string.comandes)) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Tornar")
+                    }
+                }
             )
         },
         bottomBar = {
@@ -46,7 +52,7 @@ fun ComandesScreen(navController: NavHostController, commands: List<Comanda>) {
                 IconButton(onClick = { navController.navigate(TakeAwayApp.Carret.name) }) {
                     Icon(
                         imageVector = Icons.Default.ShoppingCart,
-                        contentDescription = "Ir al Carret"
+                        contentDescription = "Anar a la cistella"
                     )
                 }
             }
@@ -104,8 +110,18 @@ fun ComandesScreenPreview() {
         idComanda = 1,
         idUsuari = 1,
         Productes = listOf(
-            ProductePerComanda(idProducte = 1, nomProducte = "Hamburguesa", quantitat = 1, preuTotalProducte = 8.00),
-            ProductePerComanda(idProducte = 1, nomProducte = "Hamburguesa", quantitat = 1, preuTotalProducte = 8.00)
+            ProductePerComanda(
+                idProducte = 1,
+                nomProducte = "Hamburguesa",
+                quantitat = 1,
+                preuTotalProducte = 8.00
+            ),
+            ProductePerComanda(
+                idProducte = 1,
+                nomProducte = "Hamburguesa",
+                quantitat = 1,
+                preuTotalProducte = 8.00
+            )
         ),
         PreuTotal = 16.50,
         Estat = EstatComanda.EN_PREPARACIO,
@@ -116,8 +132,18 @@ fun ComandesScreenPreview() {
         idComanda = 2,
         idUsuari = 1,
         Productes = listOf(
-            ProductePerComanda(idProducte = 1, nomProducte = "Hamburguesa", quantitat = 1, preuTotalProducte = 8.00),
-            ProductePerComanda(idProducte = 1, nomProducte = "Hamburguesa", quantitat = 1, preuTotalProducte = 8.00)
+            ProductePerComanda(
+                idProducte = 1,
+                nomProducte = "Hamburguesa",
+                quantitat = 1,
+                preuTotalProducte = 8.00
+            ),
+            ProductePerComanda(
+                idProducte = 1,
+                nomProducte = "Hamburguesa",
+                quantitat = 1,
+                preuTotalProducte = 8.00
+            )
         ),
         PreuTotal = 11.50,
         Estat = EstatComanda.RECOLLIT,

@@ -1,7 +1,7 @@
 package com.example.tr1.model
 
 data class Product(
-    val idProducte: String,
+    val idProducte: Int,
     val nomProducte: String,
     val Descripcio: String,
     val Preu: Double,

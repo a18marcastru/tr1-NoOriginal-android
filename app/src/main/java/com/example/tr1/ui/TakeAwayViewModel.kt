@@ -42,14 +42,14 @@ class TakeAwayViewModel() : ViewModel() {
     init {
         viewModelScope.launch {
             try {
-                mSocket = IO.socket("http://10.0.2.2:3010")
+                //mSocket = IO.socket("http://10.0.2.2:3010")
+                mSocket = IO.socket("http://juicengo.dam.inspedralbes.cat:20871")
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.e("SocketIO", "Failed to connect to socket", e)
             }
             mSocket.connect()
             mSocket.on(Socket.EVENT_CONNECT) {
-                Log.d("SocketIO", "Connected to socket")
                 Log.d("SocketIO", "Connected to socket: ${mSocket.id()}")
                 mSocket.on("new-product", onNewProduct)
                 mSocket.on("delete-product", onDeleteProduct)
@@ -66,19 +66,20 @@ class TakeAwayViewModel() : ViewModel() {
     // En crear un producte
     private val onNewProduct = Emitter.Listener { args ->
         val productJson = args[0] as String
-        Log.d("SocketIO", "Producte a actualitzar: $productJson")
+        Log.d("SocketIO", "Producte nou: $productJson")
         val newProduct = Gson().fromJson(productJson, Product::class.java)
         products.value = products.value?.toMutableList()?.apply {
             add(newProduct)
         } ?: listOf(newProduct)
-        Log.d("SocketIO", "New product: $newProduct")
+        Log.d("SocketIO", "Producte afegit: $newProduct")
     }
 
     // En esborrar un producte
     private val onDeleteProduct = Emitter.Listener { args ->
-        val productId = args[0]
-        val deletedProduct = products.value?.find { it.idProducte == productId }
-        products.value = products.value?.filterNot { it.idProducte == productId }
+        val productId = args[0] as String
+        val id = Gson().fromJson(productId, Int::class.java)
+        val deletedProduct = products.value?.find { it.idProducte == id }
+        products.value = products.value?.filterNot { it.idProducte == id }
         Log.d("SocketIO", "Deleted product: $deletedProduct")
     }
 
@@ -126,7 +127,7 @@ class TakeAwayViewModel() : ViewModel() {
     fun decrementProductQuantity(product: Product) {
         val index = cartProducts.indexOf(product)
 
-        if(index != 1 && cartProducts[index].quantity > 1){
+        if(index != -1 && cartProducts[index].quantity > 1){
             cartProducts[index] = cartProducts[index].copy(quantity = cartProducts[index].quantity - 1)
         }
     }

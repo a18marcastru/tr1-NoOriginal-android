@@ -1,4 +1,4 @@
-import androidx.compose.foundation.ExperimentalFoundationApi
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,12 +20,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.tr1.ui.TakeAwayViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuScreen(navController: NavHostController, products: List<Product>, viewModel: TakeAwayViewModel) {
     Scaffold(
@@ -80,17 +82,14 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAway
             .padding(16.dp),
         horizontalAlignment = Alignment.Start
     ) {
+        val imageUrl = "http://juicengo.dam.inspedralbes.cat:20871/uploads/images/${product.Imatge}"
         val painter = rememberAsyncImagePainter(
-            ImageRequest.Builder(LocalContext.current)
-                .data(data = product.Imatge)
-                .apply {
-                    diskCachePolicy(CachePolicy.ENABLED)
-                    crossfade(true)
-                    placeholder(R.drawable.ic_launcher_background)
-//                    error(R.drawable.error_image)
-                }
-                .build()
+            model = imageUrl,
+            contentScale = ContentScale.Crop, // Adjust scaling as needed
+            placeholder = painterResource(id = R.drawable.ic_launcher_background),
+            //error = painterResource(id = R.drawable.error_image) // Add an error image
         )
+        Log.d("imatge", "Image URL: ${product.Imatge}")
         Image(
             painter = painter,
             contentDescription = product.nomProducte,

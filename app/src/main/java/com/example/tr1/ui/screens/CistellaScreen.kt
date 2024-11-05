@@ -17,11 +17,7 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
-import com.example.tr1.ui.TakeAwayApp
 import com.example.tr1.ui.TakeAwayViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +26,7 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Carrito") },
+                title = { Text(text = "Cistella") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver")
@@ -51,7 +47,7 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
             // Comprobar si hay productos en el carrito
             if (cartProducts.isEmpty()) {
                 item {
-                    Text(text = "El carrito está vacío.", style = MaterialTheme.typography.bodyMedium)
+                    Text(text = "La cistella és buida.", style = MaterialTheme.typography.bodyMedium)
                 }
             } else {
                 // Mostrar los productos en el carrito
