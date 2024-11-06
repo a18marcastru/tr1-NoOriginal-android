@@ -35,7 +35,6 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
             )
         }
     ) { padding ->
-        // Obtener los productos en el carrito
         val cartProducts = viewModel.cartProducts
 
         LazyColumn(
@@ -44,13 +43,11 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            // Comprobar si hay productos en el carrito
             if (cartProducts.isEmpty()) {
                 item {
                     Text(text = "La cistella és buida.", style = MaterialTheme.typography.bodyMedium)
                 }
             } else {
-                // Mostrar los productos en el carrito
                 items(cartProducts) { product ->
                     Column(modifier = Modifier.padding(vertical = 8.dp)) {
                         Text(text = product.nomProducte, style = MaterialTheme.typography.bodyLarge)
@@ -58,13 +55,11 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                         Text(text = "Preu producte: ${product.Preu} €", style = MaterialTheme.typography.bodyMedium)
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        // Row for quantity control and delete icon
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            // Quantity control
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 IconButton(onClick = { viewModel.decrementProductQuantity(product) }) {
                                     Text(text = "-")
@@ -74,7 +69,6 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                                     Text(text = "+")
                                 }
                             }
-                            // Delete icon
                             IconButton(
                                 onClick = { viewModel.removeProductFromCart(product) },
                                 colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.error)
@@ -84,7 +78,7 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                         }
 
                         Spacer(modifier = Modifier.height(8.dp))
-                        Divider() // Un separador entre productos
+                        Divider()
                     }
                 }
                 item {

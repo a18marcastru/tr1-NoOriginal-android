@@ -139,7 +139,12 @@ class TakeAwayViewModel() : ViewModel() {
         }else{
             cartProducts.add(product.copy(quantity = 1))
         }
+        Log.d("count cart products", "${cartProducts.size}.toString()")
 
+    }
+
+    fun isInCart(product: Product): Boolean {
+        return cartProducts.any { it.nomProducte == product.nomProducte }
     }
 
     fun resetCart() {

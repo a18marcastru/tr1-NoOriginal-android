@@ -1,32 +1,46 @@
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.tr1.R
 import com.example.tr1.model.Product
 import com.example.tr1.ui.TakeAwayApp
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import coil.request.CachePolicy
-import coil.request.ImageRequest
 import com.example.tr1.ui.TakeAwayViewModel
+import kotlinx.coroutines.delay
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBarDefaults
+import com.example.tr1.ui.theme.LightOrange
+import com.example.tr1.ui.theme.LightRed
+import com.example.tr1.ui.theme.LightYellow
+import com.example.tr1.ui.theme.LightGreen
 
+
+// MenuScreen.kt
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuScreen(navController: NavHostController, products: List<Product>, viewModel: TakeAwayViewModel) {
@@ -34,23 +48,54 @@ fun MenuScreen(navController: NavHostController, products: List<Product>, viewMo
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.menu)) },
+                colors = TopAppBarDefaults.smallTopAppBarColors(
+                    containerColor = LightOrange, // Color de fondo del TopAppBar
+                    titleContentColor = Color.White
+                ),
                 actions = {
                     IconButton(onClick = { navController.navigate(TakeAwayApp.Perfil.name) }) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
-                            contentDescription = "Ir a Perfil"
+                            contentDescription = "Ir a Perfil",
+                            tint = LightGreen // Color para el icono del perfil
                         )
                     }
                 }
             )
         },
         bottomBar = {
-            BottomAppBar {
-                IconButton(onClick = { navController.navigate(TakeAwayApp.Carret.name) }) {
-                    Icon(
-                        imageVector = Icons.Default.ShoppingCart,
-                        contentDescription = "Ir al Carret"
-                    )
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Box(modifier = Modifier.align(Alignment.BottomEnd)) {
+                    Button(
+                        onClick = { navController.navigate(TakeAwayApp.Carret.name) },
+                        colors = ButtonDefaults.buttonColors(containerColor = LightGreen),
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .align(Alignment.BottomEnd)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ShoppingCart,
+                            contentDescription = "Ir al Carret",
+                            modifier = Modifier.size(35.dp).padding(2.dp),
+                            tint = Color.Black // Color para el icono del carrito
+                        )
+                    }
+                    AnimatedVisibility(
+                        visible = viewModel.cartProducts.isNotEmpty(),
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        Text(
+                            text = viewModel.cartProducts.size.toString(),
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .offset(x = (58).dp, y = (-10).dp)
+                                .background(LightRed, shape = CircleShape) // Fondo para el contador del carrito
+                                .padding(6.dp)
+                        )
+                    }
                 }
             }
         }
@@ -60,36 +105,41 @@ fun MenuScreen(navController: NavHostController, products: List<Product>, viewMo
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp)
+                .padding(8.dp)
         ) {
             items(products.size) { index ->
                 val product = products[index]
-                ProductCardScreen(product = product, onClick = {
-                    navController.navigate("productScreen/${product.nomProducte}")
-                }, viewModel)
-                }
+                ProductCardScreen(
+                    product = product,
+                    onClick = { navController.navigate("productScreen/${product.nomProducte}") },
+                    viewModel,
+                    onAddToCart = { viewModel.addToCart(product) }
+                )
             }
         }
     }
-
+}
 
 @Composable
-fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAwayViewModel) {
+fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAwayViewModel, onAddToCart: () -> Unit) {
+    val isInCart = viewModel.isInCart(product)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(16.dp),
+            .padding(8.dp)
+            .background(LightGreen, shape = MaterialTheme.shapes.medium) // Fondo de la tarjeta de producto
+            .padding(12.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        val imageUrl = "http://juicengo.dam.inspedralbes.cat:20871/uploads/images/${product.Imatge}"
+        val imageUrl = "http://10.0.2.2:3010/uploads/images/${product.Imatge}"
         val painter = rememberAsyncImagePainter(
             model = imageUrl,
-            contentScale = ContentScale.Crop, // Adjust scaling as needed
-            placeholder = painterResource(id = R.drawable.ic_launcher_background),
-            //error = painterResource(id = R.drawable.error_image) // Add an error image
+            contentScale = ContentScale.Crop,
+            placeholder = painterResource(id = R.drawable.ic_launcher_background)
         )
-        Log.d("imatge", "Image URL: ${product.Imatge}")
+
         Image(
             painter = painter,
             contentDescription = product.nomProducte,
@@ -97,48 +147,108 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAway
                 .fillMaxWidth()
                 .height(150.dp)
         )
+
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = product.nomProducte,
             style = MaterialTheme.typography.titleMedium,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            color = Color.Black // Color del título del producto
         )
         Text(
             text = product.Descripcio,
             style = MaterialTheme.typography.bodyMedium,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = Color.Black // Color del texto de la descripción
         )
-        Spacer(modifier = Modifier.height(8.dp))
 
-        if (product.Stock == 0) {
-            Text(
-                text = "Sin Stock",
-                color = Color.Red,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }else{
-            Text(
-                text = "En stock",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Green
-            )
-        }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Precio: \$${product.Preu}",
+            text = if (product.Stock == 0) "Sin Stock" else "En stock",
+            color = if (product.Stock == 0) LightRed else Color.Green, // Color según el stock
             style = MaterialTheme.typography.bodyMedium
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "${product.Preu} €",
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.Black
+        )
+
         Spacer(modifier = Modifier.height(8.dp))
         Button(
-            onClick = { viewModel.addToCart(product) },
+            onClick = {
+                if (!isInCart) {
+                    onAddToCart()
+                }
+            },
             enabled = product.Stock != 0,
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (product.Stock == 0) Color.Red else MaterialTheme.colorScheme.primary
-            )
+                containerColor = if (product.Stock == 0) LightRed else LightOrange // Color del botón según disponibilidad
+            ),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Afegir")
+            Text(text = if (isInCart) "Afegit! ✔" else "Afegir", color = Color.White)
         }
-        }
+
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun MenuScreenPreview() {
+    val products = listOf(
+        Product(
+            idProducte = 1,
+            nomProducte = "Producte 1",
+            Descripcio = "Descripció del producte 1",
+            Preu = 10.0,
+            Stock = 10,
+            Imatge = "imatge1.jpg",
+        ),
+        Product(
+            idProducte = 2,
+            nomProducte = "Producte 2",
+            Descripcio = "Descripció del producte 2",
+            Preu = 20.0,
+            Stock = 0,
+            Imatge = "imatge2.jpg",
+        ),
+        Product(
+            idProducte = 3,
+            nomProducte = "Producte 3",
+            Descripcio = "Descripció del producte 3",
+            Preu = 30.0,
+            Stock = 5,
+            Imatge = "imatge3.jpg",
+        ),
+        Product(
+            idProducte = 4,
+            nomProducte = "Producte 4",
+            Descripcio = "Descripció del producte 4",
+            Preu = 40.0,
+            Stock = 0,
+            Imatge = "imatge4.jpg",
+        ),
+        Product(
+            idProducte = 5,
+            nomProducte = "Producte 5",
+            Descripcio = "Descripció del producte 5",
+            Preu = 50.0,
+            Stock = 15,
+            Imatge = "imatge5.jpg",
+        ),
+        Product(
+            idProducte = 6,
+            nomProducte = "Producte 6",
+            Descripcio = "Descripció del producte 6",
+            Preu = 60.0,
+            Stock = 3,
+            Imatge = "imatge6.jpg",
+        ),
+    )
+    MenuScreen(navController = NavHostController(LocalContext.current), products = products, viewModel = TakeAwayViewModel())
+}
+
