@@ -9,9 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.tr1.data.loadComandesFromApi
 import com.example.tr1.data.loadProductsFromApi
 import com.example.tr1.data.login
+import com.example.tr1.data.newComanda
 import com.example.tr1.model.Comanda
 import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.Product
+import com.example.tr1.model.ProductePerComanda
 import com.example.tr1.model.Usuari
 import com.google.gson.Gson
 import io.socket.client.IO
@@ -36,14 +38,18 @@ class TakeAwayViewModel() : ViewModel() {
     var currentUser = mutableStateOf<Usuari?>(null)
         private set
 
+    fun getIdUsuari(): Int? {
+        return currentUser.value?.idUser
+    }
+
     lateinit var mSocket: Socket
 
      //Creació de socket
     init {
         viewModelScope.launch {
             try {
-                //mSocket = IO.socket("http://10.0.2.2:3010")
-                mSocket = IO.socket("http://juicengo.dam.inspedralbes.cat:20871")
+                mSocket = IO.socket("http://10.0.2.2:3010")
+                //mSocket = IO.socket("http://juicengo.dam.inspedralbes.cat:20871")
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.e("SocketIO", "Failed to connect to socket", e)
@@ -139,14 +145,13 @@ class TakeAwayViewModel() : ViewModel() {
         }else{
             cartProducts.add(product.copy(quantity = 1))
         }
-
     }
 
     fun resetCart() {
         cartProducts.clear()
     }
 
-    fun getTotalPrice(): Double{
+    fun getTotalPrice(): Double {
         return cartProducts.sumOf { it.Preu * it.quantity }
     }
 
@@ -164,6 +169,24 @@ class TakeAwayViewModel() : ViewModel() {
         }
     }
 
+    fun transformProductsToOrderProducts(products: List<Product>): List<ProductePerComanda> {
+        return products.map { product ->
+            ProductePerComanda(
+                idProducte = product.idProducte,
+                nomProducte = product.nomProducte,
+                quantitat = product.quantity,
+                preuTotalProducte = product.Preu * product.quantity
+            )
+        }
+    }
+
+    fun novaComanda(comanda: Comanda) {
+        viewModelScope.launch {
+            Log.d("TakeAwayApp", "Nova comanda: $comanda")
+            newComanda(comanda)
+        }
+    }
+
     fun loginViewModel(email: String, password: String) {
         viewModelScope.launch {
             val loginRequest = LoginRequest(email, password)
@@ -172,10 +195,10 @@ class TakeAwayViewModel() : ViewModel() {
             login(loginRequest) { loginResponse, throwable ->
                 Log.d("login", "$loginResponse")
                 if(throwable != null) {
-                    Log.e("login", "Error de red: ${throwable.message}")
+                    Log.e("login", "Error de xarxa: ${throwable.message}")
                 } else if (loginResponse != null && loginResponse.Confirmacio) {
                     // Login successful
-                    Log.d("login", "Credenciales correctas")
+                    Log.d("login", "Credencials correctes")
                     val user = Usuari(
                         loginResponse.idUser,
                         loginResponse.Nom,
@@ -185,7 +208,7 @@ class TakeAwayViewModel() : ViewModel() {
                     currentUser.value = user
                     loginError.value = null
                 } else {
-                    Log.d("login", "Credenciales incorrectas")
+                    Log.d("login", "Credencials incorrectes")
                     loginError.value = "Correu o contrasenya incorrectes"
                 }
             }

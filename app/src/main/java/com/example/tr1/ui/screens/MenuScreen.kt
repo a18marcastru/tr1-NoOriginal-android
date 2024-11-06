@@ -140,5 +140,5 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAway
         ) {
             Text(text = "Afegir")
         }
-        }
     }
+}

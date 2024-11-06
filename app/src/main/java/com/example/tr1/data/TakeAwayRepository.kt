@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.tr1.model.ProductesResponse
 import android.util.Log
 import com.example.tr1.R
+import com.example.tr1.model.Comanda
 import com.example.tr1.model.ComandesResponse
 import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.LoginResponse
@@ -69,13 +70,31 @@ fun login(loginRequest: LoginRequest, onLoginResult: (LoginResponse?, Throwable?
                 onLoginResult(response.body(), null)
             } else {
                 Log.e("TakeAwayApp", "Login error: ${response.code()}")
-                onLoginResult(null, null) // or create a custom exception
+                onLoginResult(null, null)
             }
         }
 
         override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
             Log.e("TakeAwayApp", "Login failed: ${t.message}")
             onLoginResult(null, t)
+        }
+    })
+}
+
+fun newComanda(comandaRequest: Comanda) {
+    val call = RetrofitInstance.api.newComanda(comandaRequest)
+
+    call.enqueue(object : Callback<Unit> {
+        override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+            if (response.isSuccessful) {
+                Log.d("TakeAwayApp", "Comanda enviada correctament")
+            } else {
+                Log.e("TakeAwayApp", "Error en enviar la comanda: ${response.code()}")
+            }
+        }
+
+        override fun onFailure(call: Call<Unit>, t: Throwable) {
+            Log.e("TakeAwayApp", "Error de xarxa: ${t.message}")
         }
     })
 }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
@@ -29,11 +30,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.tr1.ui.TakeAwayApp
+import com.example.tr1.ui.TakeAwayViewModel
 
 // Pantalla de Compra
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CompraScreen(navController: NavHostController) {
+fun CompraScreen(navController: NavHostController, viewModel: TakeAwayViewModel) {
     var showDialog by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
@@ -47,29 +49,28 @@ fun CompraScreen(navController: NavHostController) {
             )
         }
     ) { padding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "Compra",
-                style = MaterialTheme.typography.titleLarge
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { showDialog = true }) {
-                Text("Confirmar")
-            }
-            if (showDialog){
-                ConfirmationDialog(
-                    onDismiss = { showDialog = false },
-                    onConfirm = {
-                        navController.navigate(TakeAwayApp.Confirmat.name)
-                        showDialog = false
-                    }
-                )
+            item {
+                TicketCard(viewModel)
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = { showDialog = true }) {
+                    Text("Confirmar")
+                }
+                if (showDialog) {
+                    ConfirmationDialog(
+                        onDismiss = { showDialog = false },
+                        onConfirm = {
+                            navController.navigate(TakeAwayApp.Confirmat.name)
+                            showDialog = false
+                        }
+                    )
+                }
             }
         }
     }
@@ -80,7 +81,7 @@ fun ConfirmationDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Confirmació") },
-        text = { Text("Vols continuar amb la compra") },
+        text = { Text("Vols continuar amb la compra?") },
         confirmButton = {
             Button(onClick = onConfirm) {
                 Text("Confirmar")
@@ -94,8 +95,42 @@ fun ConfirmationDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
     )
 }
 
+@Composable
+fun TicketCard(viewModel: TakeAwayViewModel) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Ticket",
+            style = MaterialTheme.typography.titleLarge
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        for (product in viewModel.cartProducts) {
+            Text(
+                text = "Producte: ${product.nomProducte}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Quantitat: ${product.quantity}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Preu: ${product.Preu * product.quantity}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        Text(
+            text = "Preu total: ${viewModel.getTotalPrice()}",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun CompraScreenPreview() {
-    CompraScreen(navController = NavHostController(LocalContext.current))
+    CompraScreen(navController = NavHostController(LocalContext.current), viewModel = TakeAwayViewModel())
 }

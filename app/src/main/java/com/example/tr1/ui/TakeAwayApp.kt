@@ -15,7 +15,7 @@ import com.example.tr1.R
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.example.tr1.ui.screens.CarretScreen
+import com.example.tr1.ui.screens.CistellaScreen
 import com.example.tr1.ui.screens.ComandesScreen
 import com.example.tr1.ui.screens.CompraScreen
 import com.example.tr1.ui.screens.ConfirmatScreen
@@ -86,10 +86,10 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             }
         }
         composable(route = TakeAwayApp.Carret.name) {
-            CarretScreen(navController, viewModel) // Pasar el ViewModel aquí también
+            CistellaScreen(navController, viewModel) // Pasar el ViewModel aquí también
         }
         composable(route = TakeAwayApp.Compra.name) {
-            CompraScreen(navController)
+            CompraScreen(navController, viewModel)
         }
         composable(route = TakeAwayApp.Confirmat.name) {
             ConfirmatScreen(navController, viewModel)

@@ -13,12 +13,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.tr1.model.Comanda
+import com.example.tr1.model.EstatComanda
 import com.example.tr1.ui.TakeAwayApp
 import com.example.tr1.ui.TakeAwayViewModel
 
@@ -26,7 +29,9 @@ import com.example.tr1.ui.TakeAwayViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfirmatScreen(navController: NavHostController, viewModel: TakeAwayViewModel) {
-//    viewModel.mSocket.emit("new-comanda")
+    LaunchedEffect(Unit) {
+        enviarNovaComanda(viewModel)
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -51,6 +56,19 @@ fun ConfirmatScreen(navController: NavHostController, viewModel: TakeAwayViewMod
             }
         }
     }
+}
+
+fun enviarNovaComanda(viewModel: TakeAwayViewModel) {
+    val comanda = Comanda(
+        idComanda = 0,
+        idUsuari = viewModel.getIdUsuari() ?: 0,
+        Data = "",
+        Estat = EstatComanda.PENDENT_DE_PREPARACIO,
+        Productes = viewModel.transformProductsToOrderProducts(viewModel.cartProducts),
+        PreuTotal = viewModel.getTotalPrice()
+    )
+    viewModel.resetCart()
+    viewModel.novaComanda(comanda)
 }
 
 @Preview(showBackground = true)

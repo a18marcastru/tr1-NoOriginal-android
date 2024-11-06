@@ -1,5 +1,6 @@
 package com.example.tr1.network
 
+import com.example.tr1.model.Comanda
 import com.example.tr1.model.ComandesResponse
 import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.LoginResponse
@@ -13,8 +14,8 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 object RetrofitInstance {
-//    private const val BASE_URL = "http://10.0.2.2:3010/"
-    private const val BASE_URL = "http://juicengo.dam.inspedralbes.cat:20871/"
+    private const val BASE_URL = "http://10.0.2.2:3010/"
+//    private const val BASE_URL = "http://juicengo.dam.inspedralbes.cat:20871/"
 
     private val retrofit by lazy {
         Retrofit.Builder()
@@ -37,4 +38,7 @@ interface TakeAwayApi {
 
     @POST("loginBD")
     fun login(@Body loginRequest: LoginRequest): Call<LoginResponse>
+
+    @POST("newComandesBD")
+    fun newComanda(@Body comandaRequest: Comanda): Call<Unit>
 }

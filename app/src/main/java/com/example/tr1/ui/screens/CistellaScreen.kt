@@ -17,12 +17,15 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.tr1.ui.TakeAwayApp
 import com.example.tr1.ui.TakeAwayViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel) {
+fun CistellaScreen(navController: NavHostController, viewModel: TakeAwayViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -47,7 +50,10 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
             // Comprobar si hay productos en el carrito
             if (cartProducts.isEmpty()) {
                 item {
-                    Text(text = "La cistella és buida.", style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        text = "La cistella és buida.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             } else {
                 // Mostrar los productos en el carrito
@@ -55,7 +61,10 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                     Column(modifier = Modifier.padding(vertical = 8.dp)) {
                         Text(text = product.nomProducte, style = MaterialTheme.typography.bodyLarge)
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text(text = "Preu producte: ${product.Preu} €", style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            text = "Preu producte: ${product.Preu} €",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
 
                         // Row for quantity control and delete icon
@@ -69,7 +78,10 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                                 IconButton(onClick = { viewModel.decrementProductQuantity(product) }) {
                                     Text(text = "-")
                                 }
-                                Text(text = product.quantity.toString(), style = MaterialTheme.typography.bodyMedium)
+                                Text(
+                                    text = product.quantity.toString(),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
                                 IconButton(onClick = { viewModel.incrementProductQuantity(product) }) {
                                     Text(text = "+")
                                 }
@@ -79,7 +91,10 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                                 onClick = { viewModel.removeProductFromCart(product) },
                                 colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.error)
                             ) {
-                                Icon(imageVector = Icons.Default.Delete, contentDescription = "Eliminar producto")
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Eliminar producte"
+                                )
                             }
                         }
 
@@ -99,12 +114,32 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                         Text(text = "Reiniciar Carrito")
                     }
                     Spacer(modifier = Modifier.height(16.dp))
+                    Button(
+                        onClick = {
+                            navController.navigate(TakeAwayApp.Compra.name)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp)
+                    ) {
+                        Text(text = "Comprar")
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Precio total del pedido: ${viewModel.getTotalPrice()} €",
+                        text = "Preu total de la compra: ${viewModel.getTotalPrice()} €",
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CarretScreenPreview() {
+    CistellaScreen(
+        navController = NavHostController(LocalContext.current),
+        viewModel = TakeAwayViewModel()
+    )
 }
