@@ -1,6 +1,5 @@
 package com.example.tr1.ui
 
-import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
@@ -10,6 +9,7 @@ import com.example.tr1.data.loadComandesFromApi
 import com.example.tr1.data.loadProductsFromApi
 import com.example.tr1.data.login
 import com.example.tr1.data.newComanda
+import com.example.tr1.model.CanviStock
 import com.example.tr1.model.Comanda
 import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.Product
@@ -21,6 +21,7 @@ import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.coroutines.launch
 
+@Suppress("IMPLICIT_CAST_TO_ANY")
 class TakeAwayViewModel() : ViewModel() {
 
     var products = mutableStateOf<List<Product>?>(null)
@@ -60,6 +61,7 @@ class TakeAwayViewModel() : ViewModel() {
                 mSocket.on("new-product", onNewProduct)
                 mSocket.on("delete-product", onDeleteProduct)
                 mSocket.on("update-product", onUpdatedProduct)
+                mSocket.on("update-stock", onUpdateStock)
             }
             mSocket.on(Socket.EVENT_DISCONNECT) {
                 Log.d("SocketIO", "Disconnected from socket")
@@ -102,6 +104,22 @@ class TakeAwayViewModel() : ViewModel() {
             }
         }
         Log.d("SocketIO", "Updated product: $updatedProduct")
+    }
+
+    private val onUpdateStock = Emitter.Listener { args ->
+        val stockJson = args[0] as String
+        Log.d("SocketIO", "Canvi a l'stock: $stockJson")
+        val updatedStockList = Gson().fromJson(stockJson, Array<CanviStock>::class.java).toList()
+
+        products.value = products.value?.map { existingProduct ->
+            val stockChange = updatedStockList.find { it.idProducte == existingProduct.idProducte }
+            (if (stockChange != null) {
+                existingProduct.copy(Stock = existingProduct.Stock - stockChange.Stock)
+            } else {
+                existingProduct
+            })
+        }
+        Log.d("SocketIO", "Updated products: ${products.value}")
     }
 
 

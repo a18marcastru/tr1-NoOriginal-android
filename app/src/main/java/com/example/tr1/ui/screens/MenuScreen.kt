@@ -21,10 +21,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import coil.request.CachePolicy
-import coil.request.ImageRequest
 import com.example.tr1.ui.TakeAwayViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
