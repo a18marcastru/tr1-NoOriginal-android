@@ -1,5 +1,6 @@
 package com.example.tr1
 
+import MenuScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +22,9 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     TakeAwayApp(navController, this) // Pasar 'this' como contexto
                 }
+                 // Pasar el ViewModel aquí
+
+
             }
         }
     }

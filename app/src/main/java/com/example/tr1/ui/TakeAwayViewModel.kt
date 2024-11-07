@@ -1,5 +1,6 @@
 package com.example.tr1.ui
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
@@ -17,11 +18,13 @@ import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.Product
 import com.example.tr1.model.ProductePerComanda
 import com.example.tr1.model.Usuari
+import com.example.tr1.model.registerRequest
 import com.google.gson.Gson
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.coroutines.launch
+import java.security.MessageDigest
 
 class TakeAwayViewModel() : ViewModel() {
 
@@ -188,13 +191,19 @@ class TakeAwayViewModel() : ViewModel() {
         }else{
             cartProducts.add(product.copy(quantity = 1))
         }
+        Log.d("count cart products", "${cartProducts.size}.toString()")
+
+    }
+
+    fun isInCart(product: Product): Boolean {
+        return cartProducts.any { it.nomProducte == product.nomProducte }
     }
 
     fun resetCart() {
         cartProducts.clear()
     }
 
-    fun getTotalPrice(): Double {
+    fun getTotalPrice(): Double{
         return cartProducts.sumOf { it.Preu * it.quantity }
     }
 
@@ -230,9 +239,15 @@ class TakeAwayViewModel() : ViewModel() {
         }
     }
 
+    fun hashPassword(password: String): String{
+        val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
+
     fun loginViewModel(email: String, password: String) {
         viewModelScope.launch {
-            val loginRequest = LoginRequest(email, password)
+            val hashedPassword = hashPassword(password)
+            val loginRequest = LoginRequest(email, hashedPassword)
             loginError.value = null
 
             login(loginRequest) { loginResponse, throwable ->
@@ -257,4 +272,35 @@ class TakeAwayViewModel() : ViewModel() {
             }
         }
     }
+
+    fun registerViewModel(name: String, email: String, password: String) {
+        viewModelScope.launch {
+            val registerRequest = registerRequest(name, email, password)
+            loginError.value = null
+
+            register(registerRequest) { RegisterResponse, throwable ->
+                Log.d("register", "$RegisterResponse")
+                if(throwable != null) {
+                    Log.e("register", "Error de red: ${throwable.message}")
+                } else if (RegisterResponse != null && RegisterResponse.Confirmacio) {
+                    // Register successful
+                    Log.d("register", "Credenciales correctas")
+                    val user = Usuari(
+                        RegisterResponse.idUser.toString(),
+                        RegisterResponse.Nom,
+                        RegisterResponse.Correu,
+                        RegisterResponse.Contrasenya
+                    )
+                    currentUser.value = user
+                    loginError.value = null
+                } else {
+                    Log.d("register", "Credenciales incorrectas")
+                    loginError.value = "Correu o contrasenya incorrectes"
+                }
+            }
+        }
+    }
+
+
+
 }
