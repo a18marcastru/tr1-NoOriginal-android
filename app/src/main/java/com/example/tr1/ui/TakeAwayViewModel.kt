@@ -257,4 +257,12 @@ class TakeAwayViewModel() : ViewModel() {
             }
         }
     }
+
+    fun logout() {
+        // Limpiar el usuario actual
+        currentUser.value = null
+        // Limpiar otros datos de sesión si es necesario
+        cartProducts.clear()  // Si quieres limpiar el carrito también
+        // Otras posibles acciones de limpieza de sesión
+    }
 }

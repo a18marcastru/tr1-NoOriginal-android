@@ -12,11 +12,12 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import com.example.tr1.ui.TakeAwayApp
+import com.example.tr1.ui.TakeAwayViewModel
 
 // Pantalla de Perfil
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilScreen(navController: NavHostController) {
+fun PerfilScreen(navController: NavHostController, viewModel: TakeAwayViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -43,7 +44,17 @@ fun PerfilScreen(navController: NavHostController) {
             Button(onClick = { navController.navigate(TakeAwayApp.Comandes.name) }) {
                 Text(text = "Historial de comandes")
             }
-            Button(onClick = {navController.navigate(TakeAwayApp.Login.name)}) { Text("LogOut") }
+            Button(onClick = {
+                // Limpiar los datos de sesión
+                viewModel.logout()
+                // Navegar a la pantalla de login
+                navController.navigate(TakeAwayApp.Login.name) {
+                    // Asegúrate de limpiar el backstack para que no puedas volver a la pantalla de perfil después de hacer log out
+                    popUpTo(TakeAwayApp.Login.name) { inclusive = true }
+                }
+            }) {
+                Text(text = "LogOut")
+            }
         }
     }
 }
