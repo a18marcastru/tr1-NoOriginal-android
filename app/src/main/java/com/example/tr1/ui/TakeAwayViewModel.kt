@@ -9,8 +9,10 @@ import com.example.tr1.data.loadComandesFromApi
 import com.example.tr1.data.loadProductsFromApi
 import com.example.tr1.data.login
 import com.example.tr1.data.newComanda
+import com.example.tr1.model.CanviEstat
 import com.example.tr1.model.CanviStock
 import com.example.tr1.model.Comanda
+import com.example.tr1.model.EstatComanda
 import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.Product
 import com.example.tr1.model.ProductePerComanda
@@ -21,7 +23,6 @@ import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.coroutines.launch
 
-@Suppress("IMPLICIT_CAST_TO_ANY")
 class TakeAwayViewModel() : ViewModel() {
 
     var products = mutableStateOf<List<Product>?>(null)
@@ -62,6 +63,7 @@ class TakeAwayViewModel() : ViewModel() {
                 mSocket.on("delete-product", onDeleteProduct)
                 mSocket.on("update-product", onUpdatedProduct)
                 mSocket.on("update-stock", onUpdateStock)
+                mSocket.on("update-estat", onUpdateState)
             }
             mSocket.on(Socket.EVENT_DISCONNECT) {
                 Log.d("SocketIO", "Disconnected from socket")
@@ -122,6 +124,29 @@ class TakeAwayViewModel() : ViewModel() {
         Log.d("SocketIO", "Updated products: ${products.value}")
     }
 
+    private val onUpdateState = Emitter.Listener { args ->
+        val stateJson = args[0] as String
+        Log.d("SocketIO", "Canvi d'estat: $stateJson")
+        val updatedState = Gson().fromJson(stateJson, CanviEstat::class.java)
+
+        val estat = EstatComanda.valueOf(updatedState.Estat)
+        Log.d("SocketIO", "Estat nou: $estat")
+
+        val updatedComanda = comandes.value?.find { it.idComanda == updatedState.idComanda }
+        Log.d("SocketIO", "Updated comanda: $updatedComanda")
+        if (updatedComanda != null) {
+            comandes.value = comandes.value?.map {
+                if (it.idComanda == updatedState.idComanda) {
+                    it.copy(Estat = estat)
+                } else {
+                    it
+                }
+            }
+        } else {
+            Log.e("SocketIO", "Comanda no trobada: ${updatedState.idComanda}")
+        }
+        Log.d("SocketIO", "Updated comandes: ${comandes.value}")
+    }
 
     override fun onCleared() {
         super.onCleared()

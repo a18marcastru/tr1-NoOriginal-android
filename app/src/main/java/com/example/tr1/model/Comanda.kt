@@ -1,11 +1,13 @@
 package com.example.tr1.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Comanda(
     val idComanda: Int,
     val idUsuari: Int,
     val Productes: List<ProductePerComanda>,
     val PreuTotal: Double,
-    val Estat: EstatComanda,
+    var Estat: EstatComanda,
     val Data: String
 )
 
@@ -18,6 +20,11 @@ data class ProductePerComanda(
     val nomProducte: String,
     val quantitat: Int,
     val preuTotalProducte: Double
+)
+
+data class CanviEstat(
+    val idComanda: Int,
+    val Estat: String
 )
 
 enum class EstatComanda {
