@@ -121,6 +121,10 @@ fun register(registerRequest: RegisterRequest, onRegisterResult: (RegisterRespon
     })
 }
 
+fun updateUser(idUsuari: String, usuari: Usuari) {
+
+}
+
 fun loadUsuarisFromJson(context: Context): List<Usuari> {
     val jsonString = context.resources.openRawResource(R.raw.users)
         .bufferedReader().use { it.readText() }

@@ -14,6 +14,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 object RetrofitInstance {
     private const val BASE_URL = "http://10.0.2.2:3010/"
@@ -47,4 +48,6 @@ interface TakeAwayApi {
     @POST("registerBD")
     fun register(@Body RegisterRequest: RegisterRequest): Call<RegisterResponse>
 
+    @PUT("updateUser/{id}")
+    fun updateUser(@Path("id") id: String, @Body data: Map<String, String>)
 }

@@ -250,8 +250,6 @@ class TakeAwayViewModel() : ViewModel() {
             val hashedPassword = hashPassword(password)
             val loginRequest = LoginRequest(email, hashedPassword)
 
-
-
             loginError.value = null
 
             login(loginRequest) { loginResponse, throwable ->
