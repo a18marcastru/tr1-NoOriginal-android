@@ -1,5 +1,7 @@
 package com.example.tr1.ui.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,8 +19,16 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.example.tr1.ui.TakeAwayViewModel
+import com.example.tr1.ui.theme.LightGreen
+import com.example.tr1.ui.theme.LightOrange
+import com.example.tr1.ui.theme.LightRed
+import com.example.tr1.ui.theme.LightWhite
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,7 +41,11 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(
+                    containerColor = LightOrange, // Color de fondo del TopAppBar
+                    titleContentColor = Color.White
+                )
             )
         }
     ) { padding ->
@@ -45,52 +59,83 @@ fun CarretScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
         ) {
             if (cartProducts.isEmpty()) {
                 item {
-                    Text(text = "La cistella és buida.", style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        text = "La cistella és buida.",
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             } else {
                 items(cartProducts) { product ->
-                    Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                        Text(text = product.nomProducte, style = MaterialTheme.typography.bodyLarge)
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(text = "Preu producte: ${product.Preu} €", style = MaterialTheme.typography.bodyMedium)
-                        Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                            .background(LightWhite, shape = MaterialTheme.shapes.medium)
+                            .padding(12.dp)
+                    ) {
+                        val imageUrl = "http://10.0.2.2:3010/uploads/images/${product.Imatge}"
+                        val painter = rememberAsyncImagePainter(model = imageUrl, contentScale = ContentScale.Crop)
+                        Image(
+                            painter = painter,
+                            contentDescription = product.nomProducte,
+                            modifier = Modifier
+                                .size(100.dp)
+                                .padding(end = 8.dp)
+                        )
 
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                IconButton(onClick = { viewModel.decrementProductQuantity(product) }) {
-                                    Text(text = "-")
-                                }
-                                Text(text = product.quantity.toString(), style = MaterialTheme.typography.bodyMedium)
-                                IconButton(onClick = { viewModel.incrementProductQuantity(product) }) {
-                                    Text(text = "+")
-                                }
-                            }
-                            IconButton(
-                                onClick = { viewModel.removeProductFromCart(product) },
-                                colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = product.nomProducte,
+                                style = MaterialTheme.typography.titleMedium,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                color = Color.Black
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "${product.Preu} €",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.Black
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                Icon(imageVector = Icons.Default.Delete, contentDescription = "Eliminar producto")
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    IconButton(onClick = { viewModel.decrementProductQuantity(product) }) {
+                                        Text(text = "-", color = Color.Black)
+                                    }
+                                    Text(text = product.quantity.toString(), style = MaterialTheme.typography.bodyMedium)
+                                    IconButton(onClick = { viewModel.incrementProductQuantity(product) }) {
+                                        Text(text = "+", color = Color.Black)
+                                    }
+                                }
+                                IconButton(
+                                    onClick = { viewModel.removeProductFromCart(product) },
+                                    colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                                ) {
+                                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Eliminar producto")
+                                }
                             }
                         }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Divider()
                     }
+                    Divider()
                 }
                 item {
                     Button(
                         onClick = {
                             viewModel.resetCart() // Reinicia el carrito
                         },
+                        colors = ButtonDefaults.buttonColors(containerColor = LightOrange),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 16.dp)
                     ) {
-                        Text(text = "Reiniciar Carrito")
+                        Text(text = "Reiniciar Carrito", color = Color.White)
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
