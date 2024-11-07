@@ -18,6 +18,7 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.coroutines.launch
+import java.security.MessageDigest
 
 class TakeAwayViewModel() : ViewModel() {
 
@@ -169,9 +170,15 @@ class TakeAwayViewModel() : ViewModel() {
         }
     }
 
+    fun hashPassword(password: String): String{
+        val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
+
     fun loginViewModel(email: String, password: String) {
         viewModelScope.launch {
-            val loginRequest = LoginRequest(email, password)
+            val hashedPassword = hashPassword(password)
+            val loginRequest = LoginRequest(email, hashedPassword)
             loginError.value = null
 
             login(loginRequest) { loginResponse, throwable ->

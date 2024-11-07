@@ -40,9 +40,6 @@ fun PerfilScreen(navController: NavHostController) {
                 text = "Perfil",
                 style = MaterialTheme.typography.titleLarge
             )
-            Button(onClick = { navController.navigate(TakeAwayApp.Comandes.name) }) {
-                Text(text = "Historial de comandes")
-            }
             Button(onClick = {navController.navigate(TakeAwayApp.Login.name)}) { Text("LogOut") }
         }
     }

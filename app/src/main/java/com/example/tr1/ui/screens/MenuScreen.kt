@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -65,13 +66,15 @@ fun MenuScreen(navController: NavHostController, products: List<Product>, viewMo
         },
         bottomBar = {
             Box(modifier = Modifier.fillMaxWidth()) {
-                Box(modifier = Modifier.align(Alignment.BottomEnd)) {
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
                     Button(
                         onClick = { navController.navigate(TakeAwayApp.Carret.name) },
-                        colors = ButtonDefaults.buttonColors(containerColor = LightGreen),
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .align(Alignment.BottomEnd)
+                        colors = ButtonDefaults.buttonColors(containerColor = LightGreen)
                     ) {
                         Icon(
                             imageVector = Icons.Default.ShoppingCart,
@@ -90,10 +93,20 @@ fun MenuScreen(navController: NavHostController, products: List<Product>, viewMo
                             color = Color.White,
                             fontSize = 16.sp,
                             modifier = Modifier
-                                .align(Alignment.TopEnd)
                                 .offset(x = (58).dp, y = (-10).dp)
                                 .background(LightRed, shape = CircleShape) // Fondo para el contador del carrito
-                                .padding(6.dp)
+                                .padding(8.dp)
+                        )
+                    }
+                    Button(
+                        onClick = { navController.navigate(TakeAwayApp.Comandes.name) },
+                        colors = ButtonDefaults.buttonColors(containerColor = LightGreen)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.List, // Icono de comandos
+                            contentDescription = "Ir a Comandes",
+                            modifier = Modifier.size(35.dp).padding(2.dp),
+                            tint = Color.Black // Color para el icono de comandos
                         )
                     }
                 }
@@ -137,7 +150,7 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAway
         val painter = rememberAsyncImagePainter(
             model = imageUrl,
             contentScale = ContentScale.Crop,
-            placeholder = painterResource(id = R.drawable.ic_launcher_background)
+//            placeholder = painterResource(id = R.drawable.ic_launcher_background)
         )
 
         Image(

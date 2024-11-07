@@ -47,16 +47,7 @@ fun ComandesScreen(navController: NavHostController, commands: List<Comanda>) {
                 }
             )
         },
-        bottomBar = {
-            BottomAppBar {
-                IconButton(onClick = { navController.navigate(TakeAwayApp.Carret.name) }) {
-                    Icon(
-                        imageVector = Icons.Default.ShoppingCart,
-                        contentDescription = "Anar a la cistella"
-                    )
-                }
-            }
-        }
+
     ) { padding ->
         LazyColumn(
             modifier = Modifier
