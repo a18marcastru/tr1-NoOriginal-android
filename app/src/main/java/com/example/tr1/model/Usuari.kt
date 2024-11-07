@@ -23,4 +23,21 @@ data class LoginResponse(
     val Contrasenya: String,
     val Targeta: String,
     val Confirmacio: Boolean
+
 )
+
+data class registerRequest(
+    val Nom: String,
+    val Correu: String,
+    val Contrasenya: String,
+)
+
+data class RegisterResponse(
+    val idUser: Int,
+    val Nom: String,
+    val Correu: String,
+    val Contrasenya: String,
+    val Targeta: String,
+    val Confirmacio: Boolean
+)
+

@@ -9,10 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.tr1.data.loadComandesFromApi
 import com.example.tr1.data.loadProductsFromApi
 import com.example.tr1.data.login
+import com.example.tr1.data.register
 import com.example.tr1.model.Comanda
 import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.Product
 import com.example.tr1.model.Usuari
+import com.example.tr1.model.registerRequest
 import com.google.gson.Gson
 import io.socket.client.IO
 import io.socket.client.Socket
@@ -203,4 +205,35 @@ class TakeAwayViewModel() : ViewModel() {
             }
         }
     }
+
+    fun registerViewModel(name: String, email: String, password: String) {
+        viewModelScope.launch {
+            val registerRequest = registerRequest(name, email, password)
+            loginError.value = null
+
+            register(registerRequest) { RegisterResponse, throwable ->
+                Log.d("register", "$RegisterResponse")
+                if(throwable != null) {
+                    Log.e("register", "Error de red: ${throwable.message}")
+                } else if (RegisterResponse != null && RegisterResponse.Confirmacio) {
+                    // Register successful
+                    Log.d("register", "Credenciales correctas")
+                    val user = Usuari(
+                        RegisterResponse.idUser.toString(),
+                        RegisterResponse.Nom,
+                        RegisterResponse.Correu,
+                        RegisterResponse.Contrasenya
+                    )
+                    currentUser.value = user
+                    loginError.value = null
+                } else {
+                    Log.d("register", "Credenciales incorrectas")
+                    loginError.value = "Correu o contrasenya incorrectes"
+                }
+            }
+        }
+    }
+
+
+
 }
