@@ -5,6 +5,8 @@ import com.example.tr1.model.ComandesResponse
 import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.LoginResponse
 import com.example.tr1.model.ProductesResponse
+import com.example.tr1.model.RegisterRequest
+import com.example.tr1.model.RegisterResponse
 import retrofit2.http.Path
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,8 +16,8 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 object RetrofitInstance {
-//    private const val BASE_URL = "http://10.0.2.2:3010/"
-    private const val BASE_URL = "http://juicengo.dam.inspedralbes.cat:20871/"
+    private const val BASE_URL = "http://10.0.2.2:3010/"
+//    private const val BASE_URL = "http://juicengo.dam.inspedralbes.cat:20871/"
 
     private val retrofit by lazy {
         Retrofit.Builder()
@@ -41,4 +43,8 @@ interface TakeAwayApi {
 
     @POST("newComandesBD")
     fun newComanda(@Body comandaRequest: Comanda): Call<Unit>
+
+    @POST("registerBD")
+    fun register(@Body RegisterRequest: RegisterRequest): Call<RegisterResponse>
+
 }

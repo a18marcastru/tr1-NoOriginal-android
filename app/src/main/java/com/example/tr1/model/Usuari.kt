@@ -26,7 +26,7 @@ data class LoginResponse(
 
 )
 
-data class registerRequest(
+data class RegisterRequest(
     val Nom: String,
     val Correu: String,
     val Contrasenya: String,

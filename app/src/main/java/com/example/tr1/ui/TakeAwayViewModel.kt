@@ -10,6 +10,7 @@ import com.example.tr1.data.loadComandesFromApi
 import com.example.tr1.data.loadProductsFromApi
 import com.example.tr1.data.login
 import com.example.tr1.data.newComanda
+import com.example.tr1.data.register
 import com.example.tr1.model.CanviEstat
 import com.example.tr1.model.CanviStock
 import com.example.tr1.model.Comanda
@@ -17,8 +18,8 @@ import com.example.tr1.model.EstatComanda
 import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.Product
 import com.example.tr1.model.ProductePerComanda
+import com.example.tr1.model.RegisterRequest
 import com.example.tr1.model.Usuari
-import com.example.tr1.model.registerRequest
 import com.google.gson.Gson
 import io.socket.client.IO
 import io.socket.client.Socket
@@ -248,6 +249,9 @@ class TakeAwayViewModel() : ViewModel() {
         viewModelScope.launch {
             val hashedPassword = hashPassword(password)
             val loginRequest = LoginRequest(email, hashedPassword)
+
+
+
             loginError.value = null
 
             login(loginRequest) { loginResponse, throwable ->
@@ -275,7 +279,9 @@ class TakeAwayViewModel() : ViewModel() {
 
     fun registerViewModel(name: String, email: String, password: String) {
         viewModelScope.launch {
-            val registerRequest = registerRequest(name, email, password)
+            val hashedPassword = hashPassword(password)
+            val registerRequest = RegisterRequest(name, email, hashedPassword)
+            Log.d("register", "Request: $registerRequest")
             loginError.value = null
 
             register(registerRequest) { RegisterResponse, throwable ->
@@ -286,7 +292,7 @@ class TakeAwayViewModel() : ViewModel() {
                     // Register successful
                     Log.d("register", "Credenciales correctas")
                     val user = Usuari(
-                        RegisterResponse.idUser.toString(),
+                        RegisterResponse.idUser,
                         RegisterResponse.Nom,
                         RegisterResponse.Correu,
                         RegisterResponse.Contrasenya

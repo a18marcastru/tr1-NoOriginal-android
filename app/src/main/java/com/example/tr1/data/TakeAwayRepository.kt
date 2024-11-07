@@ -11,7 +11,7 @@ import com.example.tr1.model.LoginResponse
 import com.example.tr1.model.RegisterResponse
 import com.example.tr1.model.Usuari
 import com.example.tr1.model.UsuarisResponse
-import com.example.tr1.model.registerRequest
+import com.example.tr1.model.RegisterRequest
 import com.example.tr1.network.RetrofitInstance
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
@@ -101,7 +101,7 @@ fun newComanda(comandaRequest: Comanda) {
     })
 }
 
-fun register(registerRequest: registerRequest, onRegisterResult: (RegisterResponse?, Throwable?) -> Unit) {
+fun register(registerRequest: RegisterRequest, onRegisterResult: (RegisterResponse?, Throwable?) -> Unit) {
     val call = RetrofitInstance.api.register(registerRequest)
 
     call.enqueue(object : Callback<RegisterResponse> {
@@ -109,7 +109,7 @@ fun register(registerRequest: registerRequest, onRegisterResult: (RegisterRespon
             if (response.isSuccessful) {
                 onRegisterResult(response.body(), null)
             } else {
-                Log.e("TakeAwayApp", "Register error: ${response.code()}")
+                Log.e("TakeAwayRep", "Register error: ${response.code()}")
                 onRegisterResult(null, null) // or create a custom exception
             }
         }

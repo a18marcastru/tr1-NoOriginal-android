@@ -127,10 +127,8 @@ fun CistellaScreen(navController: NavHostController, viewModel: TakeAwayViewMode
                                 }
                             }
                         }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Divider() // Un separador entre productos
                     }
+                    Divider() // Un separador entre productos
                 }
                 item {
                     Button(
@@ -142,7 +140,7 @@ fun CistellaScreen(navController: NavHostController, viewModel: TakeAwayViewMode
                             .fillMaxWidth()
                             .padding(vertical = 16.dp)
                     ) {
-                        Text(text = "Reiniciar Carrito", color = Color.White)
+                        Text(text = "Reiniciar Cistella", color = Color.White)
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
