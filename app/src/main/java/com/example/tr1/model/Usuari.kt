@@ -21,7 +21,6 @@ data class LoginResponse(
     val Nom: String,
     val Correu: String,
     val Contrasenya: String,
-    val Targeta: String,
     val Confirmacio: Boolean
 
 )
@@ -37,7 +36,6 @@ data class RegisterResponse(
     val Nom: String,
     val Correu: String,
     val Contrasenya: String,
-    val Targeta: String,
     val Confirmacio: Boolean
 )
 
