@@ -38,6 +38,7 @@ import com.example.tr1.ui.TakeAwayViewModel
 import kotlinx.coroutines.delay
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.draw.clip
 import com.example.tr1.ui.theme.LightOrange
 import com.example.tr1.ui.theme.LightRed
 import com.example.tr1.ui.theme.LightYellow
@@ -49,20 +50,37 @@ fun MenuScreen(navController: NavHostController, products: List<Product>, viewMo
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.menu)) },
+                title = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Image(
+                            painter = rememberAsyncImagePainter("http://10.0.2.2:3010/uploads/images/logoApp.jpg"), // Replace with your image resource
+                            contentDescription = "Store Logo",
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape) // Añadir borde redondo
+                        )
+                        Text(
+                            text = stringResource(id = R.string.menu),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Color.White
+                        )
+                        IconButton(onClick = { navController.navigate(TakeAwayApp.Perfil.name) }) {
+                            Icon(
+                                imageVector = Icons.Default.AccountCircle,
+                                contentDescription = "Ir a Perfil",
+                                tint = LightGreen // Color para el icono del perfil
+                            )
+                        }
+                    }
+                },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = LightOrange, // Color de fondo del TopAppBar
                     titleContentColor = Color.White
-                ),
-                actions = {
-                    IconButton(onClick = { navController.navigate(TakeAwayApp.Perfil.name) }) {
-                        Icon(
-                            imageVector = Icons.Default.AccountCircle,
-                            contentDescription = "Ir a Perfil",
-                            tint = LightGreen // Color para el icono del perfil
-                        )
-                    }
-                }
+                )
             )
         },
         bottomBar = {
