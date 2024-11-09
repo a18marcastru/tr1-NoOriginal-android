@@ -48,7 +48,7 @@ interface TakeAwayApi {
     fun newComanda(@Body comandaRequest: Comanda): Call<Unit>
 
     @POST("registerBD")
-    fun register(@Body RegisterRequest: RegisterRequest): Call<RegisterResponse>
+    fun register(@Body registerRequest: RegisterRequest): Call<RegisterResponse>
 
     @PUT("updatePerfil/{id}")
     fun updateUser(@Path("id") id: String, @Body data: UpdateUserRequest): Call<Unit>

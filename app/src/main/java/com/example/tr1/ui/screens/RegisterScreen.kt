@@ -76,7 +76,6 @@ fun RegisterScreen(navController: NavHostController, context: Context, viewModel
         Button(onClick = {
             if(email.isNotEmpty() && password.isNotEmpty()) {
                 viewModel.registerViewModel(username, email, password)
-                navController.navigate(TakeAwayApp.Menu.name)
             }
             else{
                 Toast.makeText(context, "Correu o Contrasenya buida", Toast.LENGTH_SHORT).show()
@@ -85,6 +84,14 @@ fun RegisterScreen(navController: NavHostController, context: Context, viewModel
             Text(text = "Registrar")
         }
 
-
+        LaunchedEffect(viewModel.loginError.value, viewModel.currentUser.value) {
+            viewModel.loginError.value?.let { error ->
+                // Mostrar mensaje de error en un Toast si loginError contiene un mensaje
+                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            } ?: viewModel.currentUser.value?.let {
+                // Si currentUser tiene un valor, significa que el inicio de sesión fue exitoso
+                navController.navigate(TakeAwayApp.Menu.name)
+            }
+        }
     }
 }

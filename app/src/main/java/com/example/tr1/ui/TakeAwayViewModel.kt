@@ -285,18 +285,18 @@ class TakeAwayViewModel() : ViewModel() {
             Log.d("register", "Request: $registerRequest")
             loginError.value = null
 
-            register(registerRequest) { RegisterResponse, throwable ->
-                Log.d("register", "$RegisterResponse")
+            register(registerRequest) { registerResponse, throwable ->
+                Log.d("register", "$registerResponse")
                 if (throwable != null) {
                     Log.e("register", "Error de red: ${throwable.message}")
-                } else if (RegisterResponse != null && RegisterResponse.Confirmacio) {
+                } else if (registerResponse != null && registerResponse.Confirmacio) {
                     // Register successful
                     Log.d("register", "Credenciales correctas")
                     val user = Usuari(
-                        RegisterResponse.idUser,
-                        RegisterResponse.Nom,
-                        RegisterResponse.Correu,
-                        RegisterResponse.Contrasenya
+                        registerResponse.idUser,
+                        registerResponse.Nom,
+                        registerResponse.Correu,
+                        registerResponse.Contrasenya
                     )
                     currentUser.value = user
                     loginError.value = null
