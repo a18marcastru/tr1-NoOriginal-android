@@ -7,6 +7,8 @@ import com.example.tr1.model.LoginResponse
 import com.example.tr1.model.ProductesResponse
 import com.example.tr1.model.RegisterRequest
 import com.example.tr1.model.RegisterResponse
+import com.example.tr1.model.UpdateUserRequest
+import com.example.tr1.model.UpdateUserResponse
 import retrofit2.http.Path
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -48,6 +50,6 @@ interface TakeAwayApi {
     @POST("registerBD")
     fun register(@Body RegisterRequest: RegisterRequest): Call<RegisterResponse>
 
-    @PUT("updateUser/{id}")
-    fun updateUser(@Path("id") id: String, @Body data: Map<String, String>)
+    @PUT("updatePerfil/{id}")
+    fun updateUser(@Path("id") id: String, @Body data: UpdateUserRequest): Call<Unit>
 }

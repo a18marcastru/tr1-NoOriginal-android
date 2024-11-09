@@ -12,6 +12,8 @@ import com.example.tr1.model.RegisterResponse
 import com.example.tr1.model.Usuari
 import com.example.tr1.model.UsuarisResponse
 import com.example.tr1.model.RegisterRequest
+import com.example.tr1.model.UpdateUserRequest
+import com.example.tr1.model.UpdateUserResponse
 import com.example.tr1.network.RetrofitInstance
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
@@ -121,8 +123,29 @@ fun register(registerRequest: RegisterRequest, onRegisterResult: (RegisterRespon
     })
 }
 
-fun updateUser(idUsuari: String, usuari: Usuari) {
+fun updateUser(id: String, updateUser: UpdateUserRequest) {
+    Log.d("TakeAwayRep", "Updating user: $updateUser")
 
+    val call = RetrofitInstance.api.updateUser(id, updateUser)
+
+
+    call.enqueue(object : Callback<Unit> {
+        override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+            if (response.isSuccessful) {
+                Log.d("TakeAwayRep", "User updated successfully")
+
+            } else {
+                val errorBody = response.errorBody()?.string()
+                Log.e("TakeAwayRep", "Update error: ${response.code()}, error body: $errorBody")
+
+            }
+        }
+
+        override fun onFailure(call: Call<Unit>, t: Throwable) {
+            Log.e("TakeAwayApp", "Update failed: ${t.message}")
+
+        }
+    })
 }
 
 fun loadUsuarisFromJson(context: Context): List<Usuari> {

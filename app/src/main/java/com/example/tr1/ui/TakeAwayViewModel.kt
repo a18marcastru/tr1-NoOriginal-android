@@ -1,6 +1,5 @@
 package com.example.tr1.ui
 
-import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +10,7 @@ import com.example.tr1.data.loadProductsFromApi
 import com.example.tr1.data.login
 import com.example.tr1.data.newComanda
 import com.example.tr1.data.register
+import com.example.tr1.data.updateUser
 import com.example.tr1.model.CanviEstat
 import com.example.tr1.model.CanviStock
 import com.example.tr1.model.Comanda
@@ -19,6 +19,7 @@ import com.example.tr1.model.LoginRequest
 import com.example.tr1.model.Product
 import com.example.tr1.model.ProductePerComanda
 import com.example.tr1.model.RegisterRequest
+import com.example.tr1.model.UpdateUserRequest
 import com.example.tr1.model.Usuari
 import com.google.gson.Gson
 import io.socket.client.IO
@@ -50,7 +51,7 @@ class TakeAwayViewModel() : ViewModel() {
 
     lateinit var mSocket: Socket
 
-     //Creació de socket
+    //Creació de socket
     init {
         viewModelScope.launch {
             try {
@@ -172,24 +173,26 @@ class TakeAwayViewModel() : ViewModel() {
     fun incrementProductQuantity(product: Product) {
         val index = cartProducts.indexOf(product)
 
-        if(index != -1){
-            cartProducts[index] = cartProducts[index].copy(quantity = cartProducts[index].quantity + 1)
+        if (index != -1) {
+            cartProducts[index] =
+                cartProducts[index].copy(quantity = cartProducts[index].quantity + 1)
         }
     }
 
     fun decrementProductQuantity(product: Product) {
         val index = cartProducts.indexOf(product)
 
-        if(index != -1 && cartProducts[index].quantity > 1){
-            cartProducts[index] = cartProducts[index].copy(quantity = cartProducts[index].quantity - 1)
+        if (index != -1 && cartProducts[index].quantity > 1) {
+            cartProducts[index] =
+                cartProducts[index].copy(quantity = cartProducts[index].quantity - 1)
         }
     }
 
     fun addToCart(product: Product) {
         val existingProduct = cartProducts.find { it.nomProducte == product.nomProducte }
-        if(existingProduct != null){
+        if (existingProduct != null) {
             incrementProductQuantity(existingProduct)
-        }else{
+        } else {
             cartProducts.add(product.copy(quantity = 1))
         }
         Log.d("count cart products", "${cartProducts.size}.toString()")
@@ -204,7 +207,7 @@ class TakeAwayViewModel() : ViewModel() {
         cartProducts.clear()
     }
 
-    fun getTotalPrice(): Double{
+    fun getTotalPrice(): Double {
         return cartProducts.sumOf { it.Preu * it.quantity }
     }
 
@@ -240,7 +243,7 @@ class TakeAwayViewModel() : ViewModel() {
         }
     }
 
-    fun hashPassword(password: String): String{
+    fun hashPassword(password: String): String {
         val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
         return bytes.joinToString("") { "%02x".format(it) }
     }
@@ -254,7 +257,7 @@ class TakeAwayViewModel() : ViewModel() {
 
             login(loginRequest) { loginResponse, throwable ->
                 Log.d("login", "$loginResponse")
-                if(throwable != null) {
+                if (throwable != null) {
                     Log.e("login", "Error de xarxa: ${throwable.message}")
                 } else if (loginResponse != null && loginResponse.Confirmacio) {
                     // Login successful
@@ -284,7 +287,7 @@ class TakeAwayViewModel() : ViewModel() {
 
             register(registerRequest) { RegisterResponse, throwable ->
                 Log.d("register", "$RegisterResponse")
-                if(throwable != null) {
+                if (throwable != null) {
                     Log.e("register", "Error de red: ${throwable.message}")
                 } else if (RegisterResponse != null && RegisterResponse.Confirmacio) {
                     // Register successful
@@ -305,6 +308,15 @@ class TakeAwayViewModel() : ViewModel() {
         }
     }
 
+    fun updateUserViewModel(data: UpdateUserRequest) {
+        viewModelScope.launch {
+            //updateUser(id, data)
+            Log.d("updateUser", "Actualitzant usuari: $data")
+            updateUser(currentUser.value?.idUser.toString(), data)
+        }
+
+
+    }
     fun logout() {
         // Limpiar el usuario actual
         currentUser.value = null
@@ -312,4 +324,6 @@ class TakeAwayViewModel() : ViewModel() {
         cartProducts.clear()  // Si quieres limpiar el carrito también
         // Otras posibles acciones de limpieza de sesión
     }
+
+
 }
