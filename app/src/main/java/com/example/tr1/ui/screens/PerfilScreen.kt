@@ -1,4 +1,6 @@
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,9 +24,8 @@ import com.example.tr1.ui.TakeAwayViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilScreen(navController: NavHostController, viewModel: TakeAwayViewModel) {
+fun PerfilScreen(navController: NavHostController, context: Context, viewModel: TakeAwayViewModel) {
     var isEditingName by remember { mutableStateOf(false) }
-    var isEditingEmail by remember { mutableStateOf(false) }
     var isEditingPassword by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf(viewModel.currentUser.value?.Nom ?: "") }
     var email by remember { mutableStateOf(viewModel.currentUser.value?.Correu ?: "") }
@@ -81,24 +82,6 @@ fun PerfilScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             ) {
-                TextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Gmail") },
-                    enabled = isEditingEmail,
-                    modifier = Modifier.weight(1f)
-                )
-                IconButton(onClick = { isEditingEmail = !isEditingEmail }) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar")
-                }
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            ) {
                 if (!isEditingPassword) {
                     Button(onClick = {
                         // Lógica para cambiar la contraseña
@@ -142,7 +125,13 @@ fun PerfilScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                     .padding(horizontal = 16.dp)
             ) {
                 Button(onClick = {
-                    updateUser(name, email, newPassword, viewModel);
+                    if (isEditingPassword && newPassword != repeatNewPassword) {
+                        Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+                    } else {
+                        updateUser(name, email, if (isEditingPassword) newPassword else null, viewModel)
+                        isEditingPassword = false
+                        isEditingName = false
+                    }
                 }) {
                     Text(text = "Guardar canvis")
                 }
@@ -159,19 +148,37 @@ fun PerfilScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                     Text(text = "LogOut")
                 }
 
-
-
+                LaunchedEffect(viewModel.updateInfo.value) {
+                    viewModel.updateInfo.value?.let { message ->
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        viewModel.updateInfo.value = null
+                    }
+                }
             }
         }
     }
 }
 
-fun updateUser(newName: String, newCorreu: String, newPass: String, viewModel: TakeAwayViewModel){
-    val dataUser = UpdateUserRequest(
-        Nom = newName,
-        Correu = newCorreu,
-        Contrasenya = newPass
-    )
-    Log.d("currentUser", "$dataUser")
-    viewModel.updateUserViewModel(dataUser)
+fun updateUser(newName: String, newCorreu: String, newPass: String?, viewModel: TakeAwayViewModel){
+    val dataUser = if (newPass.isNullOrEmpty()) {
+        viewModel.currentUser.value?.let {
+            UpdateUserRequest(
+                Nom = newName,
+                Correu = newCorreu,
+                Contrasenya = it.Contrasenya
+            )
+        }
+    } else {
+        val hashedPassword = viewModel.hashPassword(newPass)
+        UpdateUserRequest(
+            Nom = newName,
+            Correu = newCorreu,
+            Contrasenya = hashedPassword
+        )
+    }
+
+    dataUser?.let {
+        Log.d("currentUser", "$it")
+        viewModel.updateUserViewModel(it)
+    }
 }

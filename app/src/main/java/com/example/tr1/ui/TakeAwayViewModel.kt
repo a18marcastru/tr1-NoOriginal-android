@@ -36,6 +36,9 @@ class TakeAwayViewModel() : ViewModel() {
     var loginError = mutableStateOf<String?>(null)
         private set
 
+    var updateInfo = mutableStateOf<String?>(null)
+        private set
+
     var cartProducts = mutableStateListOf<Product>()
         private set
 
@@ -313,10 +316,10 @@ class TakeAwayViewModel() : ViewModel() {
             //updateUser(id, data)
             Log.d("updateUser", "Actualitzant usuari: $data")
             updateUser(currentUser.value?.idUser.toString(), data)
+            updateInfo.value = "Dades actualitzades"
         }
-
-
     }
+
     fun logout() {
         // Limpiar el usuario actual
         currentUser.value = null
@@ -324,6 +327,4 @@ class TakeAwayViewModel() : ViewModel() {
         cartProducts.clear()  // Si quieres limpiar el carrito también
         // Otras posibles acciones de limpieza de sesión
     }
-
-
 }

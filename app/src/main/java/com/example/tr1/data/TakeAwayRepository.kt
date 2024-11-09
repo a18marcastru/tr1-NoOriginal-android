@@ -13,7 +13,6 @@ import com.example.tr1.model.Usuari
 import com.example.tr1.model.UsuarisResponse
 import com.example.tr1.model.RegisterRequest
 import com.example.tr1.model.UpdateUserRequest
-import com.example.tr1.model.UpdateUserResponse
 import com.example.tr1.network.RetrofitInstance
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
