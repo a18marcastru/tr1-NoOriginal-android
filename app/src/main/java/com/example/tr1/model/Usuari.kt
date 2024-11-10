@@ -39,3 +39,20 @@ data class RegisterResponse(
     val Confirmacio: Boolean
 )
 
+data class UpdateUserRequest(
+    val Nom: String,
+    val Correu: String,
+    val Contrasenya: String,
+)
+
+data class UpdateUserResponse(
+    val idUser: String,
+    val Nom: String,
+    val Correu: String,
+    val Contrasenya: String,
+)
+
+
+
+
+

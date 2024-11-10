@@ -1,3 +1,6 @@
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,20 +18,20 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.tr1.model.UpdateUserRequest
 import com.example.tr1.ui.TakeAwayApp
 import com.example.tr1.ui.TakeAwayViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilScreen(navController: NavHostController, viewModel: TakeAwayViewModel) {
+fun PerfilScreen(navController: NavHostController, context: Context, viewModel: TakeAwayViewModel) {
     var isEditingName by remember { mutableStateOf(false) }
-    var isEditingEmail by remember { mutableStateOf(false) }
     var isEditingPassword by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf(viewModel.currentUser.value?.Nom ?: "") }
     var email by remember { mutableStateOf(viewModel.currentUser.value?.Correu ?: "") }
-    var password by remember { mutableStateOf(viewModel.currentUser.value?.Contrasenya ?: "") }
     var newPassword by remember { mutableStateOf("") }
     var repeatNewPassword by remember { mutableStateOf("") }
+
 
     Scaffold(
         topBar = {
@@ -57,7 +60,9 @@ fun PerfilScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
             ) {
                 TextField(
                     value = name,
@@ -73,39 +78,24 @@ fun PerfilScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
             ) {
-                TextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Gmail") },
-                    enabled = isEditingEmail,
-                    modifier = Modifier.weight(1f)
-                )
-                IconButton(onClick = { isEditingEmail = !isEditingEmail }) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar")
-                }
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-            ) {
-                TextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Password") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    enabled = false,
-                    modifier = Modifier.weight(1f)
-                )
-                IconButton(onClick = { isEditingPassword = !isEditingPassword }) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar")
+                if (!isEditingPassword) {
+                    Button(onClick = {
+                        // Lógica para cambiar la contraseña
+                        isEditingPassword = true
+                    }) {
+                        Text(text = "Modificar Contrasenya")
+                    }
                 }
             }
             if (isEditingPassword) {
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
                     TextField(
@@ -124,25 +114,28 @@ fun PerfilScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Button(onClick = {
-                        // Lógica para cambiar la contraseña
-                        if (newPassword == repeatNewPassword) {
-                            // Actualizar la contraseña en el ViewModel
-//                            viewModel.updatePassword(newPassword)
-                            isEditingPassword = false
-                        } else {
-                            // Mostrar un mensaje de error
-                        }
-                    }) {
-                        Text(text = "Cambiar")
-                    }
+
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
             ) {
+                Button(onClick = {
+                    if (isEditingPassword && newPassword != repeatNewPassword) {
+                        Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+                    } else {
+                        updateUser(name, email, if (isEditingPassword) newPassword else null, viewModel)
+                        isEditingPassword = false
+                        isEditingName = false
+                    }
+                }) {
+                    Text(text = "Guardar canvis")
+                }
+
                 Button(onClick = {
                     // Limpiar los datos de sesión
                     viewModel.logout()
@@ -154,7 +147,38 @@ fun PerfilScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                 }) {
                     Text(text = "LogOut")
                 }
+
+                LaunchedEffect(viewModel.updateInfo.value) {
+                    viewModel.updateInfo.value?.let { message ->
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        viewModel.updateInfo.value = null
+                    }
+                }
             }
         }
+    }
+}
+
+fun updateUser(newName: String, newCorreu: String, newPass: String?, viewModel: TakeAwayViewModel){
+    val dataUser = if (newPass.isNullOrEmpty()) {
+        viewModel.currentUser.value?.let {
+            UpdateUserRequest(
+                Nom = newName,
+                Correu = newCorreu,
+                Contrasenya = it.Contrasenya
+            )
+        }
+    } else {
+        val hashedPassword = viewModel.hashPassword(newPass)
+        UpdateUserRequest(
+            Nom = newName,
+            Correu = newCorreu,
+            Contrasenya = hashedPassword
+        )
+    }
+
+    dataUser?.let {
+        Log.d("currentUser", "$it")
+        viewModel.updateUserViewModel(it)
     }
 }

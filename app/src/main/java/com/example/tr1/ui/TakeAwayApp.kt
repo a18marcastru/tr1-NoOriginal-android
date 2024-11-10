@@ -61,7 +61,7 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             }
         }
         composable(route = TakeAwayApp.Perfil.name) {
-            PerfilScreen(navController, viewModel)
+            PerfilScreen(navController, context, viewModel)
         }
         composable(route = TakeAwayApp.Comandes.name) {
             LaunchedEffect(Unit) {
