@@ -47,23 +47,21 @@ fun CistellaScreen(navController: NavHostController, viewModel: TakeAwayViewMode
                     }
                 },
                 actions = {
-                    // Agregamos el IconButton del perfil en las acciones
                     IconButton(onClick = { navController.navigate(TakeAwayApp.Perfil.name) }) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
                             contentDescription = "Ir a Perfil",
-                            tint = LightGreen // Color para el icono del perfil
+                            tint = LightGreen
                         )
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = LightOrange, // Color de fondo del TopAppBar
+                    containerColor = LightOrange,
                     titleContentColor = Color.White
                 )
             )
         }
     ) { padding ->
-        // Obtener los productos en el carrito
         val cartProducts = viewModel.cartProducts
 
         LazyColumn(
@@ -81,7 +79,6 @@ fun CistellaScreen(navController: NavHostController, viewModel: TakeAwayViewMode
                     )
                 }
             } else {
-                // Mostrar los productos en el carrito
                 items(cartProducts) { product ->
                     Row(
                         modifier = Modifier
@@ -90,7 +87,7 @@ fun CistellaScreen(navController: NavHostController, viewModel: TakeAwayViewMode
                             .background(LightWhite, shape = MaterialTheme.shapes.medium)
                             .padding(12.dp)
                     ) {
-                        val imageUrl = "http://10.0.2.2:3010/uploads/images/${product.Imatge}"
+                        val imageUrl = "http://juicengo.dam.inspedralbes.cat:20871/uploads/images/${product.Imatge}"
                         val painter = rememberAsyncImagePainter(model = imageUrl, contentScale = ContentScale.Crop)
                         Image(
                             painter = painter,
@@ -139,12 +136,12 @@ fun CistellaScreen(navController: NavHostController, viewModel: TakeAwayViewMode
                             }
                         }
                     }
-                    Divider() // Un separador entre productos
+                    Divider()
                 }
                 item {
                     Button(
                         onClick = {
-                            viewModel.resetCart() // Reinicia el carrito
+                            viewModel.resetCart()
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = LightOrange),
                         modifier = Modifier

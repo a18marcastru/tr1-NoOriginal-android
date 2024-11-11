@@ -129,7 +129,7 @@ fun ProductScreen(navController: NavHostController, product: Product, viewModel:
             Text(text = "Stock: ${product.Stock}", style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(16.dp))
 
-            val imageUrl = "http://10.0.2.2:3010/uploads/images/${product.Imatge}"
+            val imageUrl = "http://juicengo.dam.inspedralbes.cat:20871/uploads/images/${product.Imatge}"
             val painter = rememberAsyncImagePainter(
                 model = imageUrl,
                 contentScale = ContentScale.Crop,

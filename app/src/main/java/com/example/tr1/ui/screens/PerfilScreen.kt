@@ -90,7 +90,6 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
             ) {
                 if (!isEditingPassword) {
                     Button(onClick = {
-                        // Lógica para cambiar la contraseña
                         isEditingPassword = true
                     }) {
                         Text(text = "Modificar Contrasenya")

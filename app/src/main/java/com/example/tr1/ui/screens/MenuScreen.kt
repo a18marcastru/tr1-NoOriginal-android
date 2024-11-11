@@ -51,7 +51,7 @@ fun MenuScreen(navController: NavHostController, products: List<Product>, viewMo
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Image(
-                            painter = rememberAsyncImagePainter("http://10.0.2.2:3010/uploads/images/logoApp.jpg"), // Replace with your image resource
+                            painter = rememberAsyncImagePainter("http://juicengo.dam.inspedralbes.cat:20871/uploads/images/logoApp.jpg"), // Replace with your image resource
                             contentDescription = "Store Logo",
                             modifier = Modifier
                                 .size(40.dp)

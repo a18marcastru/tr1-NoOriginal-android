@@ -146,14 +146,3 @@ fun updateUser(id: String, updateUser: UpdateUserRequest) {
         }
     })
 }
-
-fun loadUsuarisFromJson(context: Context): List<Usuari> {
-    val jsonString = context.resources.openRawResource(R.raw.users)
-        .bufferedReader().use { it.readText() }
-
-    val gson = Gson()
-    val usuariType = object : TypeToken<UsuarisResponse>() {}.type
-    val response: UsuarisResponse = gson.fromJson(jsonString, usuariType)
-
-    return response.usuaris
-}

@@ -1,7 +1,5 @@
 package com.example.tr1.model
 
-import com.google.gson.annotations.SerializedName
-
 data class Comanda(
     val idComanda: Int,
     val idUsuari: Int,

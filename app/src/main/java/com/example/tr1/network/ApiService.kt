@@ -8,7 +8,6 @@ import com.example.tr1.model.ProductesResponse
 import com.example.tr1.model.RegisterRequest
 import com.example.tr1.model.RegisterResponse
 import com.example.tr1.model.UpdateUserRequest
-import com.example.tr1.model.UpdateUserResponse
 import retrofit2.http.Path
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -19,8 +18,8 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 
 object RetrofitInstance {
-    private const val BASE_URL = "http://10.0.2.2:3010/"
-//    private const val BASE_URL = "http://juicengo.dam.inspedralbes.cat:20871/"
+    // private const val BASE_URL = "http://10.0.2.2:3010/"
+    private const val BASE_URL = "http://juicengo.dam.inspedralbes.cat:20871/"
 
     private val retrofit by lazy {
         Retrofit.Builder()

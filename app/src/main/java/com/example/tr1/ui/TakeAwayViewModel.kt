@@ -58,8 +58,8 @@ class TakeAwayViewModel() : ViewModel() {
     init {
         viewModelScope.launch {
             try {
-                mSocket = IO.socket("http://10.0.2.2:3010")
-                //mSocket = IO.socket("http://juicengo.dam.inspedralbes.cat:20871")
+                // mSocket = IO.socket("http://10.0.2.2:3010")
+                mSocket = IO.socket("http://juicengo.dam.inspedralbes.cat:20871")
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.e("SocketIO", "Failed to connect to socket", e)

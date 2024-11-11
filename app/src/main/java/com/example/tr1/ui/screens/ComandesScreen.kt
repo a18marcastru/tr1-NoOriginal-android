@@ -51,17 +51,16 @@ fun ComandesScreen(navController: NavHostController, commands: List<Comanda>) {
                     }
                 },
                 actions = {
-                    // Agregamos el IconButton del perfil en las acciones
                     IconButton(onClick = { navController.navigate(TakeAwayApp.Perfil.name) }) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
                             contentDescription = "Ir a Perfil",
-                            tint = LightGreen // Color para el icono del perfil
+                            tint = LightGreen
                         )
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = LightOrange, // Color de fondo del TopAppBar
+                    containerColor = LightOrange,
                     titleContentColor = Color.White
                 )
             )
