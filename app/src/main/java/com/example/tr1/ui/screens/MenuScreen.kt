@@ -159,7 +159,7 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAway
             .padding(12.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        val imageUrl = "http://10.0.2.2:3010/uploads/images/${product.Imatge}"
+        val imageUrl = "http://juicengo.dam.inspedralbes.cat:20871/uploads/images/${product.Imatge}"
         val painter = rememberAsyncImagePainter(
             model = imageUrl,
             contentScale = ContentScale.Crop,
@@ -189,7 +189,7 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAway
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = if (product.Stock == 0) "Sin Stock" else "En stock",
+            text = if (product.Stock == 0) "Sense Stock" else "En stock",
             color = if (product.Stock == 0) LightRed else Color.Green,
             style = MaterialTheme.typography.bodyMedium
         )

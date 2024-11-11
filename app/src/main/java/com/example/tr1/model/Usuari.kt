@@ -45,9 +45,9 @@ data class UpdateUserRequest(
     val Contrasenya: String,
 )
 
-//data class UpdateUserResponse(
-//    val idUser: String,
-//    val Nom: String,
-//    val Correu: String,
-//    val Contrasenya: String,
-//)
+data class UpdateUserResponse(
+    val idUser: String,
+    val Nom: String,
+    val Correu: String,
+    val Contrasenya: String,
+)

@@ -43,14 +43,14 @@ fun CistellaScreen(navController: NavHostController, viewModel: TakeAwayViewMode
                 title = { Text(text = "Cistella") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Tornar")
                     }
                 },
                 actions = {
                     IconButton(onClick = { navController.navigate(TakeAwayApp.Perfil.name) }) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
-                            contentDescription = "Ir a Perfil",
+                            contentDescription = "Anar a Perfil",
                             tint = LightGreen
                         )
                     }
@@ -96,7 +96,6 @@ fun CistellaScreen(navController: NavHostController, viewModel: TakeAwayViewMode
                                 .size(100.dp)
                                 .padding(end = 8.dp)
                         )
-
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = product.nomProducte,
@@ -157,7 +156,11 @@ fun CistellaScreen(navController: NavHostController, viewModel: TakeAwayViewMode
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 16.dp)
+                            .padding(vertical = 16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = LightGreen,
+                            contentColor = Color.Black
+                        )
                     ) {
                         Text(text = "Comprar")
                     }

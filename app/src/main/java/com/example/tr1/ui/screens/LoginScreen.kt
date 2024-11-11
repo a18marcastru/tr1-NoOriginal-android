@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -37,6 +38,7 @@ import com.example.tr1.ui.theme.LightOrange
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import com.example.tr1.ui.theme.LightRed
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +51,7 @@ fun LoginScreen(navController: NavHostController, context: Context, viewModel: T
             TopAppBar(
                 title = { Text(text = "Login") },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = LightOrange, // Color de fondo del TopAppBar
+                    containerColor = LightOrange,
                     titleContentColor = Color.White
                 )
             )
@@ -58,7 +60,7 @@ fun LoginScreen(navController: NavHostController, context: Context, viewModel: T
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues), // Añadir padding para evitar que el contenido quede debajo del TopAppBar
+                .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -91,19 +93,29 @@ fun LoginScreen(navController: NavHostController, context: Context, viewModel: T
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Button(onClick = {
-                if (email.isNotEmpty() && password.isNotEmpty()) {
-                    viewModel.loginViewModel(email, password)
-                } else {
-                    Toast.makeText(context, "Correu o Contrasenya buida", Toast.LENGTH_SHORT).show()
-                }
-            }) {
+            Button(
+                onClick = {
+                    if (email.isNotEmpty() && password.isNotEmpty()) {
+                        viewModel.loginViewModel(email, password)
+                    } else {
+                        Toast.makeText(context, "Correu o Contrasenya buida", Toast.LENGTH_SHORT).show()
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LightOrange
+                )
+            ) {
                 Text(text = "Iniciar")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = { navController.navigate(TakeAwayApp.Register.name) }) {
+            Button(
+                onClick = { navController.navigate(TakeAwayApp.Register.name) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LightOrange
+                )
+            ) {
                 Text(text = "Registrar")
             }
 

@@ -58,7 +58,7 @@ class TakeAwayViewModel() : ViewModel() {
     init {
         viewModelScope.launch {
             try {
-                // mSocket = IO.socket("http://10.0.2.2:3010")
+//                 mSocket = IO.socket("http://10.0.2.2:3010")
                 mSocket = IO.socket("http://juicengo.dam.inspedralbes.cat:20871")
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -267,7 +267,6 @@ class TakeAwayViewModel() : ViewModel() {
         viewModelScope.launch {
             val hashedPassword = hashPassword(password)
             val registerRequest = RegisterRequest(name, email, hashedPassword)
-            Log.d("register", "Request: $registerRequest")
             loginError.value = null
 
             register(registerRequest) { registerResponse, throwable ->
@@ -284,7 +283,7 @@ class TakeAwayViewModel() : ViewModel() {
                     currentUser.value = user
                     loginError.value = null
                 } else {
-                    loginError.value = "Correu o contrasenya incorrectes"
+                    loginError.value = "Existeix l'usuari"
                 }
             }
         }

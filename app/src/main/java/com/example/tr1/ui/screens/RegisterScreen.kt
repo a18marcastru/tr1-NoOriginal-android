@@ -32,11 +32,11 @@ fun RegisterScreen(navController: NavHostController, context: Context, viewModel
                 title = { Text(text = "Registre") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Tornar enrere")
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Tornar")
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = LightOrange, // Color de fondo del TopAppBar
+                    containerColor = LightOrange,
                     titleContentColor = Color.White
                 )
             )
@@ -81,7 +81,7 @@ fun RegisterScreen(navController: NavHostController, context: Context, viewModel
                 value = password,
                 onValueChange = { password = it },
                 label = { Text(text = "Contrasenya") },
-                visualTransformation = PasswordVisualTransformation(), // Amagar la contrasenya
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 15.dp)
@@ -93,7 +93,7 @@ fun RegisterScreen(navController: NavHostController, context: Context, viewModel
                 value = confirmpassword,
                 onValueChange = { confirmpassword = it },
                 label = { Text(text = "Confirmar contrasenya") },
-                visualTransformation = PasswordVisualTransformation(), // Amagar la contrasenya
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 15.dp)
@@ -101,17 +101,22 @@ fun RegisterScreen(navController: NavHostController, context: Context, viewModel
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = {
-                if (email.isNotEmpty() && password.isNotEmpty()) {
-                    if (password == confirmpassword) {
-                        viewModel.registerViewModel(username, email, password)
+            Button(
+                onClick = {
+                    if (email.isNotEmpty() && password.isNotEmpty()) {
+                        if (password == confirmpassword) {
+                            viewModel.registerViewModel(username, email, password)
+                        } else {
+                            Toast.makeText(context, "Les contrasenyes no coincideixen", Toast.LENGTH_SHORT).show()
+                        }
                     } else {
-                        Toast.makeText(context, "Les contrasenyes no coincideixen", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Correu o Contrasenya buida", Toast.LENGTH_SHORT).show()
                     }
-                } else {
-                    Toast.makeText(context, "Correu o Contrasenya buida", Toast.LENGTH_SHORT).show()
-                }
-            }) {
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LightOrange
+                )
+            ) {
                 Text(text = "Registrar-se")
             }
 

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -57,7 +58,12 @@ fun ConfirmatScreen(navController: NavHostController, viewModel: TakeAwayViewMod
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { navController.navigate(TakeAwayApp.Menu.name) }) {
+            Button(
+                onClick = { navController.navigate(TakeAwayApp.Menu.name) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LightOrange
+                )
+            ) {
                 Text("Tornar al menu")
             }
         }

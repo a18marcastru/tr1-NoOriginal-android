@@ -1,4 +1,3 @@
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -44,7 +43,7 @@ fun ProductScreen(navController: NavHostController, product: Product, viewModel:
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Volver"
+                            contentDescription = "Tornar"
                         )
                     }
                 },
@@ -52,7 +51,7 @@ fun ProductScreen(navController: NavHostController, product: Product, viewModel:
                     IconButton(onClick = { navController.navigate(TakeAwayApp.Perfil.name) }) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
-                            contentDescription = "Ir a Perfil",
+                            contentDescription = "Anar a Perfil",
                             tint = LightGreen
                         )
                     }
@@ -78,7 +77,9 @@ fun ProductScreen(navController: NavHostController, product: Product, viewModel:
                         Icon(
                             imageVector = Icons.Default.ShoppingCart,
                             contentDescription = "Ir al Carret",
-                            modifier = Modifier.size(35.dp).padding(2.dp),
+                            modifier = Modifier
+                                .size(35.dp)
+                                .padding(2.dp),
                             tint = Color.Black
                         )
                     }
@@ -104,7 +105,9 @@ fun ProductScreen(navController: NavHostController, product: Product, viewModel:
                         Icon(
                             imageVector = Icons.Default.List,
                             contentDescription = "Ir a Comandes",
-                            modifier = Modifier.size(35.dp).padding(2.dp),
+                            modifier = Modifier
+                                .size(35.dp)
+                                .padding(2.dp),
                             tint = Color.Black
                         )
                     }
@@ -112,43 +115,80 @@ fun ProductScreen(navController: NavHostController, product: Product, viewModel:
             }
         }
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(padding),
+            contentAlignment = Alignment.Center
         ) {
-            Text(text = product.nomProducte, style = MaterialTheme.typography.titleLarge)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = product.Descripcio, style = MaterialTheme.typography.bodyMedium)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Precio: \$${product.Preu}", style = MaterialTheme.typography.bodyMedium)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Stock: ${product.Stock}", style = MaterialTheme.typography.bodyMedium)
-            Spacer(modifier = Modifier.height(16.dp))
-
-            val imageUrl = "http://juicengo.dam.inspedralbes.cat:20871/uploads/images/${product.Imatge}"
-            val painter = rememberAsyncImagePainter(
-                model = imageUrl,
-                contentScale = ContentScale.Crop,
-            )
-            Log.d("imatge", "Image URL: ${product.Imatge}")
-            Image(
-                painter = painter,
-                contentDescription = product.nomProducte,
+            Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-            )
+                    .padding(16.dp),
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = product.nomProducte, style = MaterialTheme.typography.titleLarge)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = product.Descripcio, style = MaterialTheme.typography.bodyMedium)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = "Preu: ${product.Preu} €", style = MaterialTheme.typography.bodyMedium)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    if(product.Stock != 0) {
+                        Box(
+                            modifier = Modifier.background(LightGreen)
+                        ) {
 
-            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "En stock: ${product.Stock}",
+                                color = Color.Black,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
 
-            Button(onClick = {
-                viewModel.addToCart(product)
-            }) {
-                Text(text = "Añadir al Carrito")
+                    }else{
+                        Box(
+                            modifier = Modifier.background(LightRed)
+                        ) {
+
+                            Text(
+                                text = "Sense Stock",
+                                color = Color.Black,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    val imageUrl = "http://juicengo.dam.inspedralbes.cat:20871/uploads/images/${product.Imatge}"
+                    val painter = rememberAsyncImagePainter(
+                        model = imageUrl,
+                        contentScale = ContentScale.Crop,
+                    )
+                    Image(
+                        painter = painter,
+                        contentDescription = product.nomProducte,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        onClick = {
+                            viewModel.addToCart(product)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = LightOrange
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = "Añadir al Carrito")
+                    }
+                }
             }
         }
     }

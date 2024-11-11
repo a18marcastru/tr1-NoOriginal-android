@@ -23,6 +23,8 @@ import com.example.tr1.model.UpdateUserRequest
 import com.example.tr1.ui.TakeAwayApp
 import com.example.tr1.ui.TakeAwayViewModel
 import com.example.tr1.ui.theme.LightOrange
+import com.example.tr1.ui.theme.LightRed
+import com.example.tr1.ui.theme.greenBtn
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +42,7 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
                 title = { Text(text = "Perfil") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Tornar")
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
@@ -89,9 +91,14 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
                     .padding(horizontal = 16.dp)
             ) {
                 if (!isEditingPassword) {
-                    Button(onClick = {
-                        isEditingPassword = true
-                    }) {
+                    Button(
+                        onClick = {
+                            isEditingPassword = true
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = LightOrange
+                        )
+                    ) {
                         Text(text = "Modificar Contrasenya")
                     }
                 }
@@ -125,7 +132,10 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
                             newPassword = ""
                             repeatNewPassword = ""
                         },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = greenBtn
+                        )
                     ) {
                         Text("Cancelar")
                     }
@@ -138,24 +148,34 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             ) {
-                Button(onClick = {
-                    if (isEditingPassword && newPassword != repeatNewPassword) {
-                        Toast.makeText(context, "Les contrasenyes no coincideixen", Toast.LENGTH_SHORT).show()
-                    } else {
-                        updateUser(name, email, if (isEditingPassword) newPassword else null, viewModel)
-                        isEditingPassword = false
-                        isEditingName = false
-                    }
-                }) {
+                Button(
+                    onClick = {
+                        if (isEditingPassword && newPassword != repeatNewPassword) {
+                            Toast.makeText(context, "Les contrasenyes no coincideixen", Toast.LENGTH_SHORT).show()
+                        } else {
+                            updateUser(name, email, if (isEditingPassword) newPassword else null, viewModel)
+                            isEditingPassword = false
+                            isEditingName = false
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = LightOrange
+                    )
+                ) {
                     Text(text = "Guardar canvis")
                 }
 
-                Button(onClick = {
+                Button(
+                    onClick = {
                     viewModel.logout()
-                    navController.navigate(TakeAwayApp.Login.name) {
-                        popUpTo(TakeAwayApp.Login.name) { inclusive = true }
-                    }
-                }) {
+                        navController.navigate(TakeAwayApp.Login.name) {
+                            popUpTo(TakeAwayApp.Login.name) { inclusive = true }
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = LightRed
+                    )
+                ) {
                     Text(text = "LogOut")
                 }
 
