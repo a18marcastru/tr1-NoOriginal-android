@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,14 +26,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.tr1.ui.TakeAwayApp
 import com.example.tr1.ui.TakeAwayViewModel
+import com.example.tr1.ui.theme.LightOrange
 
-// Pantalla de Compra
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompraScreen(navController: NavHostController, viewModel: TakeAwayViewModel) {
@@ -45,7 +47,11 @@ fun CompraScreen(navController: NavHostController, viewModel: TakeAwayViewModel)
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(
+                    containerColor = LightOrange,
+                    titleContentColor = Color.White
+                )
             )
         }
     ) { padding ->
@@ -98,6 +104,8 @@ fun ConfirmationDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
 @Composable
 fun TicketCard(viewModel: TakeAwayViewModel) {
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)

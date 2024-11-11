@@ -36,10 +36,8 @@ enum class TakeAwayApp(@StringRes val title: Int) {
 
 @Composable
 fun TakeAwayApp(navController: NavHostController, context: Context) {
-    // Inicializar el ViewModel
     val viewModel: TakeAwayViewModel = viewModel()
 
-    // Cargar productos desde la API cuando la app se inicia
     LaunchedEffect(Unit) {
         viewModel.loadProducts()
         viewModel.comandes.value = emptyList()
@@ -55,7 +53,7 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
         composable(route = TakeAwayApp.Menu.name) {
             val products = viewModel.products.value
             if (products != null) {
-                MenuScreen(navController, products, viewModel) // Pasar el ViewModel aquí
+                MenuScreen(navController, products, viewModel)
             } else {
                 Text("Carregant productes...")
             }
@@ -80,13 +78,13 @@ fun TakeAwayApp(navController: NavHostController, context: Context) {
             val products = viewModel.products.value
             val selectedProduct = products?.find { it.nomProducte == productId }
             if (selectedProduct != null) {
-                ProductScreen(navController, selectedProduct, viewModel) // Pasar el ViewModel aquí
+                ProductScreen(navController, selectedProduct, viewModel)
             } else {
                 Text("Producte no trobat")
             }
         }
         composable(route = TakeAwayApp.Carret.name) {
-            CistellaScreen(navController, viewModel) // Pasar el ViewModel aquí también
+            CistellaScreen(navController, viewModel)
         }
         composable(route = TakeAwayApp.Compra.name) {
             CompraScreen(navController, viewModel)

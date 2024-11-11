@@ -84,27 +84,22 @@ class TakeAwayViewModel() : ViewModel() {
     // En crear un producte
     private val onNewProduct = Emitter.Listener { args ->
         val productJson = args[0] as String
-        Log.d("SocketIO", "Producte nou: $productJson")
         val newProduct = Gson().fromJson(productJson, Product::class.java)
         products.value = products.value?.toMutableList()?.apply {
             add(newProduct)
         } ?: listOf(newProduct)
-        Log.d("SocketIO", "Producte afegit: $newProduct")
     }
 
     // En esborrar un producte
     private val onDeleteProduct = Emitter.Listener { args ->
         val productId = args[0] as String
         val id = Gson().fromJson(productId, Int::class.java)
-        val deletedProduct = products.value?.find { it.idProducte == id }
         products.value = products.value?.filterNot { it.idProducte == id }
-        Log.d("SocketIO", "Deleted product: $deletedProduct")
     }
 
     // En actualitzar un producte
     private val onUpdatedProduct = Emitter.Listener { args ->
         val productJson = args[0] as String
-        Log.d("SocketIO", "Producte a actualitzar: $productJson")
         val updatedProduct = Gson().fromJson(productJson, Product::class.java)
         products.value = products.value?.map { existingProduct ->
             if (existingProduct.idProducte == updatedProduct.idProducte) {
@@ -113,12 +108,10 @@ class TakeAwayViewModel() : ViewModel() {
                 existingProduct
             }
         }
-        Log.d("SocketIO", "Updated product: $updatedProduct")
     }
 
     private val onUpdateStock = Emitter.Listener { args ->
         val stockJson = args[0] as String
-        Log.d("SocketIO", "Canvi a l'stock: $stockJson")
         val updatedStockList = Gson().fromJson(stockJson, Array<CanviStock>::class.java).toList()
 
         products.value = products.value?.map { existingProduct ->
@@ -129,19 +122,15 @@ class TakeAwayViewModel() : ViewModel() {
                 existingProduct
             })
         }
-        Log.d("SocketIO", "Updated products: ${products.value}")
     }
 
     private val onUpdateState = Emitter.Listener { args ->
         val stateJson = args[0] as String
-        Log.d("SocketIO", "Canvi d'estat: $stateJson")
         val updatedState = Gson().fromJson(stateJson, CanviEstat::class.java)
 
         val estat = EstatComanda.valueOf(updatedState.Estat)
-        Log.d("SocketIO", "Estat nou: $estat")
 
         val updatedComanda = comandes.value?.find { it.idComanda == updatedState.idComanda }
-        Log.d("SocketIO", "Updated comanda: $updatedComanda")
         if (updatedComanda != null) {
             comandes.value = comandes.value?.map {
                 if (it.idComanda == updatedState.idComanda) {
@@ -153,7 +142,6 @@ class TakeAwayViewModel() : ViewModel() {
         } else {
             Log.e("SocketIO", "Comanda no trobada: ${updatedState.idComanda}")
         }
-        Log.d("SocketIO", "Updated comandes: ${comandes.value}")
     }
 
     override fun onCleared() {
@@ -198,8 +186,6 @@ class TakeAwayViewModel() : ViewModel() {
         } else {
             cartProducts.add(product.copy(quantity = 1))
         }
-        Log.d("count cart products", "${cartProducts.size}.toString()")
-
     }
 
     fun isInCart(product: Product): Boolean {
@@ -215,7 +201,7 @@ class TakeAwayViewModel() : ViewModel() {
     }
 
     fun removeProductFromCart(product: Product) {
-        cartProducts.remove(product) // Elimina el producto especificado
+        cartProducts.remove(product)
     }
 
     fun loadComandes() {
@@ -241,7 +227,6 @@ class TakeAwayViewModel() : ViewModel() {
 
     fun novaComanda(comanda: Comanda) {
         viewModelScope.launch {
-            Log.d("TakeAwayApp", "Nova comanda: $comanda")
             newComanda(comanda)
         }
     }
@@ -259,12 +244,10 @@ class TakeAwayViewModel() : ViewModel() {
             loginError.value = null
 
             login(loginRequest) { loginResponse, throwable ->
-                Log.d("login", "$loginResponse")
                 if (throwable != null) {
                     Log.e("login", "Error de xarxa: ${throwable.message}")
                 } else if (loginResponse != null && loginResponse.Confirmacio) {
                     // Login successful
-                    Log.d("login", "Credencials correctes")
                     val user = Usuari(
                         loginResponse.idUser,
                         loginResponse.Nom,
@@ -274,7 +257,6 @@ class TakeAwayViewModel() : ViewModel() {
                     currentUser.value = user
                     loginError.value = null
                 } else {
-                    Log.d("login", "Credencials incorrectes")
                     loginError.value = "Correu o contrasenya incorrectes"
                 }
             }
@@ -289,12 +271,10 @@ class TakeAwayViewModel() : ViewModel() {
             loginError.value = null
 
             register(registerRequest) { registerResponse, throwable ->
-                Log.d("register", "$registerResponse")
                 if (throwable != null) {
                     Log.e("register", "Error de red: ${throwable.message}")
                 } else if (registerResponse != null && registerResponse.Confirmacio) {
                     // Register successful
-                    Log.d("register", "Credenciales correctas")
                     val user = Usuari(
                         registerResponse.idUser,
                         registerResponse.Nom,
@@ -304,7 +284,6 @@ class TakeAwayViewModel() : ViewModel() {
                     currentUser.value = user
                     loginError.value = null
                 } else {
-                    Log.d("register", "Credenciales incorrectas")
                     loginError.value = "Correu o contrasenya incorrectes"
                 }
             }
@@ -313,18 +292,13 @@ class TakeAwayViewModel() : ViewModel() {
 
     fun updateUserViewModel(data: UpdateUserRequest) {
         viewModelScope.launch {
-            //updateUser(id, data)
-            Log.d("updateUser", "Actualitzant usuari: $data")
             updateUser(currentUser.value?.idUser.toString(), data)
             updateInfo.value = "Dades actualitzades"
         }
     }
 
     fun logout() {
-        // Limpiar el usuario actual
         currentUser.value = null
-        // Limpiar otros datos de sesión si es necesario
-        cartProducts.clear()  // Si quieres limpiar el carrito también
-        // Otras posibles acciones de limpieza de sesión
+        cartProducts.clear()
     }
 }

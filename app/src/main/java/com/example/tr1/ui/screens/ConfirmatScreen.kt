@@ -12,10 +12,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,8 +26,8 @@ import com.example.tr1.model.Comanda
 import com.example.tr1.model.EstatComanda
 import com.example.tr1.ui.TakeAwayApp
 import com.example.tr1.ui.TakeAwayViewModel
+import com.example.tr1.ui.theme.LightOrange
 
-//Pantalla de confirmació
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfirmatScreen(navController: NavHostController, viewModel: TakeAwayViewModel) {
@@ -36,6 +38,10 @@ fun ConfirmatScreen(navController: NavHostController, viewModel: TakeAwayViewMod
         topBar = {
             TopAppBar(
                 title = { Text(text = "Estat de la compra") },
+                colors = TopAppBarDefaults.smallTopAppBarColors(
+                    containerColor = LightOrange,
+                    titleContentColor = Color.White
+                )
             )
         }
     ) { padding ->

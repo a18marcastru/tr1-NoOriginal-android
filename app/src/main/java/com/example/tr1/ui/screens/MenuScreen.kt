@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,19 +28,14 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.tr1.R
 import com.example.tr1.model.Product
 import com.example.tr1.ui.TakeAwayApp
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import com.example.tr1.ui.TakeAwayViewModel
-import kotlinx.coroutines.delay
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.draw.clip
 import com.example.tr1.ui.theme.LightOrange
 import com.example.tr1.ui.theme.LightRed
-import com.example.tr1.ui.theme.LightYellow
 import com.example.tr1.ui.theme.LightGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +55,7 @@ fun MenuScreen(navController: NavHostController, products: List<Product>, viewMo
                             contentDescription = "Store Logo",
                             modifier = Modifier
                                 .size(40.dp)
-                                .clip(CircleShape) // Añadir borde redondo
+                                .clip(CircleShape)
                         )
                         Text(
                             text = stringResource(id = R.string.menu),
@@ -72,13 +66,13 @@ fun MenuScreen(navController: NavHostController, products: List<Product>, viewMo
                             Icon(
                                 imageVector = Icons.Default.AccountCircle,
                                 contentDescription = "Ir a Perfil",
-                                tint = LightGreen // Color para el icono del perfil
+                                tint = LightGreen
                             )
                         }
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = LightOrange, // Color de fondo del TopAppBar
+                    containerColor = LightOrange,
                     titleContentColor = Color.White
                 )
             )
@@ -99,7 +93,7 @@ fun MenuScreen(navController: NavHostController, products: List<Product>, viewMo
                             imageVector = Icons.Default.ShoppingCart,
                             contentDescription = "Ir al Carret",
                             modifier = Modifier.size(35.dp).padding(2.dp),
-                            tint = Color.Black // Color para el icono del carrito
+                            tint = Color.Black
                         )
                     }
                     AnimatedVisibility(
@@ -112,8 +106,8 @@ fun MenuScreen(navController: NavHostController, products: List<Product>, viewMo
                             color = Color.White,
                             fontSize = 16.sp,
                             modifier = Modifier
-                                .offset(x = (58).dp, y = (-10).dp)
-                                .background(LightRed, shape = CircleShape) // Fondo para el contador del carrito
+                                .offset(x = (-20).dp, y = (-10).dp)
+                                .background(LightRed, shape = CircleShape)
                                 .padding(8.dp)
                         )
                     }
@@ -122,10 +116,10 @@ fun MenuScreen(navController: NavHostController, products: List<Product>, viewMo
                         colors = ButtonDefaults.buttonColors(containerColor = LightGreen)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.List, // Icono de comandos
+                            imageVector = Icons.Default.List,
                             contentDescription = "Ir a Comandes",
                             modifier = Modifier.size(35.dp).padding(2.dp),
-                            tint = Color.Black // Color para el icono de comandos
+                            tint = Color.Black
                         )
                     }
                 }
@@ -161,7 +155,7 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAway
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .padding(8.dp)
-            .background(LightGreen, shape = MaterialTheme.shapes.medium) // Fondo de la tarjeta de producto
+            .background(LightGreen, shape = MaterialTheme.shapes.medium)
             .padding(12.dp),
         horizontalAlignment = Alignment.Start
     ) {
@@ -169,7 +163,6 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAway
         val painter = rememberAsyncImagePainter(
             model = imageUrl,
             contentScale = ContentScale.Crop,
-//            placeholder = painterResource(id = R.drawable.ic_launcher_background)
         )
         Log.d("imatge", "Image URL: ${product.Imatge}")
         Image(
@@ -185,19 +178,19 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAway
             style = MaterialTheme.typography.titleMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = Color.Black // Color del título del producto
+            color = Color.Black
         )
         Text(
             text = product.Descripcio,
             style = MaterialTheme.typography.bodyMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = Color.Black // Color del texto de la descripción
+            color = Color.Black
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = if (product.Stock == 0) "Sin Stock" else "En stock",
-            color = if (product.Stock == 0) LightRed else Color.Green, // Color según el stock
+            color = if (product.Stock == 0) LightRed else Color.Green,
             style = MaterialTheme.typography.bodyMedium
         )
 
@@ -216,7 +209,7 @@ fun ProductCardScreen(product: Product, onClick: () -> Unit, viewModel: TakeAway
             },
             enabled = product.Stock != 0,
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (product.Stock == 0) LightRed else LightOrange // Color del botón según disponibilidad
+                containerColor = if (product.Stock == 0) LightRed else LightOrange
             ),
             modifier = Modifier.fillMaxWidth()
         ) {

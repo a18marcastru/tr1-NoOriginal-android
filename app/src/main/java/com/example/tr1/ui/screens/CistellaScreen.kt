@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.ui.platform.LocalContext
@@ -43,6 +44,16 @@ fun CistellaScreen(navController: NavHostController, viewModel: TakeAwayViewMode
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver")
+                    }
+                },
+                actions = {
+                    // Agregamos el IconButton del perfil en las acciones
+                    IconButton(onClick = { navController.navigate(TakeAwayApp.Perfil.name) }) {
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = "Ir a Perfil",
+                            tint = LightGreen // Color para el icono del perfil
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(

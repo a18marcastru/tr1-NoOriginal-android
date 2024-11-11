@@ -10,10 +10,12 @@ import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.tr1.ui.TakeAwayApp
 import com.example.tr1.ui.TakeAwayViewModel
+import com.example.tr1.ui.theme.LightOrange
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,15 +29,19 @@ fun RegisterScreen(navController: NavHostController, context: Context, viewModel
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Perfil") },
+                title = { Text(text = "Registre") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Tornar enrere")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(
+                    containerColor = LightOrange, // Color de fondo del TopAppBar
+                    titleContentColor = Color.White
+                )
             )
         }
-    ) { innerPadding -> // Afegir innerPadding per evitar superposició amb TopAppBar
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -111,12 +117,9 @@ fun RegisterScreen(navController: NavHostController, context: Context, viewModel
 
             LaunchedEffect(viewModel.loginError.value, viewModel.currentUser.value) {
                 viewModel.loginError.value?.let { error ->
-                    // Mostra un missatge d'error en un Toast si loginError conté un missatge
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                 } ?: viewModel.currentUser.value?.let {
-                    // Si currentUser té un valor, significa que l'inici de sessió ha estat exitós
                     navController.navigate(TakeAwayApp.Menu.name) {
-                        // Netejar el backstack per evitar tornar a la pantalla de registre
                         popUpTo(TakeAwayApp.Register.name) { inclusive = true }
                     }
                 }

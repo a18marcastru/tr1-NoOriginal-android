@@ -16,11 +16,13 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.tr1.model.UpdateUserRequest
 import com.example.tr1.ui.TakeAwayApp
 import com.example.tr1.ui.TakeAwayViewModel
+import com.example.tr1.ui.theme.LightOrange
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,7 +34,6 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
     var newPassword by remember { mutableStateOf("") }
     var repeatNewPassword by remember { mutableStateOf("") }
 
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -41,7 +42,11 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(
+                    containerColor = LightOrange,
+                    titleContentColor = Color.White
+                )
             )
         }
     ) { padding ->
@@ -67,7 +72,7 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
                 TextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Nombre") },
+                    label = { Text("Nom") },
                     enabled = isEditingName,
                     modifier = Modifier.weight(1f)
                 )
@@ -78,6 +83,7 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
@@ -101,7 +107,7 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
                     TextField(
                         value = newPassword,
                         onValueChange = { newPassword = it },
-                        label = { Text("Nueva Contraseña") },
+                        label = { Text("Nova Contrasenya") },
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -109,12 +115,21 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
                     TextField(
                         value = repeatNewPassword,
                         onValueChange = { repeatNewPassword = it },
-                        label = { Text("Repetir Nueva Contraseña") },
+                        label = { Text("Repetir Nova Contrasenya") },
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-
+                    Button(
+                        onClick = {
+                            isEditingPassword = false
+                            newPassword = ""
+                            repeatNewPassword = ""
+                        },
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Text("Cancelar")
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -126,7 +141,7 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
             ) {
                 Button(onClick = {
                     if (isEditingPassword && newPassword != repeatNewPassword) {
-                        Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Les contrasenyes no coincideixen", Toast.LENGTH_SHORT).show()
                     } else {
                         updateUser(name, email, if (isEditingPassword) newPassword else null, viewModel)
                         isEditingPassword = false
@@ -137,11 +152,8 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
                 }
 
                 Button(onClick = {
-                    // Limpiar los datos de sesión
                     viewModel.logout()
-                    // Navegar a la pantalla de login
                     navController.navigate(TakeAwayApp.Login.name) {
-                        // Asegúrate de limpiar el backstack para que no puedas volver a la pantalla de perfil después de hacer log out
                         popUpTo(TakeAwayApp.Login.name) { inclusive = true }
                     }
                 }) {
