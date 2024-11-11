@@ -134,7 +134,7 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
                         },
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = greenBtn
+                            containerColor = LightRed
                         )
                     ) {
                         Text("Cancelar")
@@ -159,7 +159,7 @@ fun PerfilScreen(navController: NavHostController, context: Context, viewModel: 
                         }
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = LightOrange
+                        containerColor = greenBtn
                     )
                 ) {
                     Text(text = "Guardar canvis")

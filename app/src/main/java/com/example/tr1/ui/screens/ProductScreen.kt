@@ -184,9 +184,10 @@ fun ProductScreen(navController: NavHostController, product: Product, viewModel:
                         colors = ButtonDefaults.buttonColors(
                             containerColor = LightOrange
                         ),
+                        enabled = product.Stock != 0,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = "Añadir al Carrito")
+                        Text(text = "Afegir a la Cistella")
                     }
                 }
             }
